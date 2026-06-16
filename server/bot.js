@@ -85,6 +85,12 @@ class BotManager {
     console.log(`[Bot] ${player.nickname} 将在 ${delay}ms 后行动 (${action.label})`);
   }
 
+  removeBot(roomId, botId) {
+    this._cancelTimer(roomId, botId);
+    this._clearTimers(roomId, botId);
+    console.log(`[Bot] 移除 Bot ${botId} 从房间 ${roomId}`);
+  }
+
   cancelRoom(roomId) {
     if (!this._timers[roomId]) return;
     for (const pid of Object.keys(this._timers[roomId])) {

@@ -33,6 +33,24 @@ function isSequential(num) {
   return asc || desc;
 }
 
+// -------------------- 辅助：查找人类玩家 --------------------
+
+/**
+ * 找到房间内第一个非 Bot 玩家
+ * @returns {object|null} 第一个人类玩家，或 null（全是 Bot 或空）
+ */
+function _findFirstHuman(room) {
+  return room.players.find(p => !p.isBot) || null;
+}
+
+/**
+ * 检查房间是否只剩 Bot（或为空）
+ * @returns {boolean}
+ */
+function _isOnlyBots(room) {
+  return room.players.length > 0 && !room.players.some(p => !p.isBot);
+}
+
 // -------------------- 房间操作 --------------------
 
 function createRoom(socket, nickname, isPublic) {
@@ -93,9 +111,19 @@ function leaveRoom(socket, roomId) {
     rooms.delete(roomId);
     destroyed = true;
     console.log(`[房间] 房间 ${roomId} 已销毁（无玩家）`);
+  } else if (_isOnlyBots(room)) {
+    // 只剩 Bot，销毁房间
+    rooms.delete(roomId);
+    destroyed = true;
+    console.log(`[房间] 房间 ${roomId} 已销毁（只剩机器人）`);
   } else if (wasHost) {
-    room.players[0].isHost = true;
-    room.hostSocketId = room.players[0].id;
+    // 房主离开，转移给第一个人类玩家
+    const newHost = _findFirstHuman(room);
+    if (newHost) {
+      newHost.isHost = true;
+      room.hostSocketId = newHost.id;
+      console.log(`[房间] 房主转移至 ${newHost.nickname}`);
+    }
   }
 
   return {
@@ -113,13 +141,16 @@ function handleDisconnect(socket) {
     const player = room.players.find(p => p.id === socket.id);
     if (player) {
       room.players = room.players.filter(p => p.id !== socket.id);
-      const destroyed = room.players.length === 0;
+      const destroyed = room.players.length === 0 || _isOnlyBots(room);
       if (destroyed) {
         rooms.delete(roomId);
-        console.log(`[房间] 房间 ${roomId} 已销毁（断连，无玩家）`);
+        console.log(`[房间] 房间 ${roomId} 已销毁（断连，${room.players.length === 0 ? '无玩家' : '只剩机器人'}）`);
       } else if (player.isHost) {
-        room.players[0].isHost = true;
-        room.hostSocketId = room.players[0].id;
+        const newHost = _findFirstHuman(room);
+        if (newHost) {
+          newHost.isHost = true;
+          room.hostSocketId = newHost.id;
+        }
       }
       results.push({ player, players: getPlayers(roomId), roomId, destroyed });
     }

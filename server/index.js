@@ -86,6 +86,9 @@ io.on('connection', (socket) => {
     socket.emit('room:left', { roomId });
     if (!result.destroyed) {
       socket.to(roomId).emit('room:player_left', { player: result.player, players: result.players });
+    } else {
+      // 房间已销毁（包括全 Bot 情况），清理 Bot 定时器
+      botManager.cancelRoom(roomId);
     }
   });
 
@@ -103,6 +106,12 @@ io.on('connection', (socket) => {
       targetSocket.leave(roomId);
       targetSocket.emit('room:kicked', { roomId, msg: '你被房主移出了房间' });
     }
+
+    // 如果被踢的是 Bot，清理其定时器
+    if (result.kickedPlayer && result.kickedPlayer.isBot) {
+      botManager.removeBot(roomId, targetId);
+    }
+
     // 通知房间其他人
     io.to(roomId).emit('room:player_left', { player: result.kickedPlayer, players: result.players, kicked: true });
     callback({ success: true });
