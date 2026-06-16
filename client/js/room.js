@@ -11,7 +11,7 @@ function renderPlayerList(players) {
   const isHost = GameState.isHost;
 
   list.innerHTML = players.map((p, index) => {
-    const pHost = p.isHost || index === 0;
+    const pHost = !!p.isHost;
     const isMe = GameState.isSelf(p.id);
     const canKick = isHost && !isMe && !pHost; // 房主可以踢非自己、非原房主的人
     return `
