@@ -183,7 +183,7 @@ function initBiddingOrder(state) {
   let startIdx = 0;
   if (state.lastAuctioneerId) {
     const found = players.findIndex(p => p.id === state.lastAuctioneerId);
-    if (found >= 0) startIdx = found;
+    if (found >= 0) startIdx = (found + 1) % players.length;
   } else {
     // 首轮：资金最少的先开始
     const minFunds = Math.min(...players.map(p => p.funds));

@@ -54,20 +54,16 @@ socket.on('room:joined', (data) => {
   console.log('[Room] 已加入房间:', data.roomId);
   GameState.roomId = data.roomId;
   GameState.players = data.players;
-  GameState.isHost = false; // 加入者不是房主（除非原房主离开后转移）
+
+  // 先根据服务器数据判断自己是否为房主（必须在 renderPlayerList 之前）
+  const me = data.players.find(p => p.id === socket.id);
+  GameState.isHost = !!(me && me.isHost);
 
   document.getElementById('roomIdDisplay').textContent = data.roomId;
-  renderPlayerList(data.players);
+  renderPlayerList(data.players);     // ← 此时 GameState.isHost 已正确
   updateLobbyUI();
   showView(Views.LOBBY);
   if (typeof playSound === 'function') playSound('confirm');
-
-  // 检查自己是否被设为房主
-  const me = data.players.find(p => p.id === socket.id);
-  if (me && me.isHost) {
-    GameState.isHost = true;
-    updateLobbyUI();
-  }
 });
 
 socket.on('room:player_joined', (data) => {
@@ -80,14 +76,15 @@ socket.on('room:player_joined', (data) => {
 socket.on('room:player_left', (data) => {
   console.log('[Room] 玩家离开:', data.player.nickname);
   GameState.players = data.players;
-  renderPlayerList(data.players);
 
-  // 检查自己是否成为新房主
+  // 先检查自己是否成为新房主（必须在 renderPlayerList 之前更新 GameState.isHost）
   const me = data.players.find(p => p.id === socket.id);
-  if (me && me.isHost) {
+  if (me && me.isHost && !GameState.isHost) {
     GameState.isHost = true;
     showToast('你已成为房主', 'info');
   }
+
+  renderPlayerList(data.players);     // ← 此时 GameState.isHost 已正确
   updateLobbyUI();
 });
 
