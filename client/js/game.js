@@ -320,7 +320,14 @@ function _renderActionArea(view) {
     return;
   }
 
-  // 拍卖师公示页展示中，跳过渲染（防止覆盖动画）
+  // 拍卖师公示页展示中 — 如果游戏已推进到其他阶段（bot 快速选卡），取消公示页
+  if (_auctionResultTimer && newPhase !== 'selectCard') {
+    clearTimeout(_auctionResultTimer);
+    _auctionResultTimer = null;
+    // 继续渲染新阶段（不 return）
+  }
+
+  // 拍卖师公示页展示中且仍在 selectCard 阶段 — 跳过渲染（防止覆盖动画）
   if (_auctionResultTimer && newPhase === 'selectCard') {
     return;
   }
@@ -331,6 +338,11 @@ function _renderActionArea(view) {
     _renderAuctionResult(view, container);
     _auctionResultTimer = setTimeout(() => {
       _auctionResultTimer = null;
+      // Guard: 如果游戏已经离开 selectCard（bot 快速选卡导致进入 rentDice），
+      // 不要用过期的 selectCard view 覆盖当前 UI
+      if (_lastView && _lastView.phase !== 'selectCard') {
+        return;
+      }
       _renderActionContent(view, container);
       container.classList.add('phase-enter');
       setTimeout(() => container.classList.remove('phase-enter'), 300);

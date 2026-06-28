@@ -1718,6 +1718,16 @@ function _settleAuctionAfterAllBids(state, roomId) {
 
   state.phase = 'selectCard';
   state.bids = [];
+
+  // 安全网：selectCard 超时后自动随机选卡（防止 bot 异常或玩家挂机卡死）
+  setTurnTimer(roomId, TURN_TIMEOUT, 'selectCard', () => {
+    const s = games.get(roomId);
+    if (!s || s.phase !== 'selectCard') return;
+    const idx = crypto.randomInt(0, s.deck.length);
+    console.log(`[引擎] selectCard 超时，拍卖师 ${s.players.find(p => p.id === s.auctioneerId)?.nickname} 自动随机选卡`);
+    selectCard(roomId, s.auctioneerId, idx);
+  });
+
   broadcast(roomId);
 }
 

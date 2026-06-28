@@ -58,7 +58,23 @@ function joinPublicRoom(roomId) {
   socket.emit('room:join', roomId, nickname, (response) => {
     if (typeof hideLoading === 'function') hideLoading();
     if (!response.success) {
-      if (typeof showToast === 'function') showToast(response.error || '加入房间失败', 'error');
+      if (response.gameInProgress) {
+        // 游戏进行中 — 进入大厅但显示观战按钮
+        GameState.roomId = roomId;
+        GameState.nickname = nickname;
+        GameState.players = response.players || [];
+        GameState.isHost = false;
+        GameState.gameInProgress = true;
+
+        document.getElementById('roomIdDisplay').textContent = roomId;
+        renderPlayerList(response.players || []);
+        updateLobbyUI();
+        showView(Views.LOBBY);
+        closeRoomListModal();
+        if (typeof showToast === 'function') showToast('游戏进行中，可点击观战', 'info');
+      } else {
+        if (typeof showToast === 'function') showToast(response.error || '加入房间失败', 'error');
+      }
       return;
     }
     closeRoomListModal();
