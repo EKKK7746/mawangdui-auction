@@ -102,7 +102,7 @@ function _renderCardDisplay(view) {
   const vis = getCardVisual(isHidden ? '???' : (card.id || card.name));
   const rarity = isHidden ? 'common' : getCardRarity(card.id || card.name);
 
-  document.getElementById('cardEmoji').innerHTML = isHidden ? '<span class="card-emoji-fallback">❓</span>' : getCardImageHtml(card.id || card.name, 'card-img-xl');
+  document.getElementById('cardEmoji').innerHTML = isHidden ? '<span class="card-emoji-fallback">❓</span>' : getCardFramedImageHtml(card.id || card.name, 'frame-xl');
   document.getElementById('cardName').textContent = name;
   document.getElementById('cardScore').textContent = isHidden ? '???' : `★ ${card.score} 分`;
   document.getElementById('cardEffect').textContent = isHidden ? '' : getEffectLabel(card.effect);
@@ -702,7 +702,7 @@ function _renderDuelSelectCard(view, container) {
       <div class="duel-cards">
         ${targetCards.map(c => `
           <button class="duel-card-btn" onclick="doDuelSelectCard('${c.id}')">
-            <span class="duel-card-emoji">${getCardImageHtml(c.id, 'card-img-md')}</span>
+            <span class="duel-card-emoji">${getCardFramedImageHtml(c.id, 'frame-sm')}</span>
             <span class="duel-card-name">${c.name}</span>
             <span class="duel-card-score">★${c.score}</span>
           </button>
@@ -780,8 +780,8 @@ function _renderDuelRentDice(view, container) {
       text-align: center;
     ">
       <div style="font-size:11px;color:#888;margin-bottom:4px;">🪞 争夺目标</div>
-      ${getCardImageHtml(targetCardId, 'card-img-lg')}
-      <div style="font-weight:bold;color:#C43A31;margin-top:4px;">${cardName}</div>
+      ${getCardFramedImageHtml(targetCardId, 'frame-lg')}
+      <div style="font-weight:bold;color:#C43A31;margin-top:6px;">${cardName}</div>
       ${cardScore ? `<div style="font-size:13px;color:#666;">★ ${cardScore} 分</div>` : ''}
     </div>
   `;
@@ -942,7 +942,7 @@ function _renderDuelResolved(view, container, duel) {
         </div>
         <div class="duel-won-card">
           <p>赢得卡牌：</p>
-          <div class="card-emoji">${getCardImageHtml(duel.targetCardId, 'card-img-lg')}</div>
+          <div class="card-emoji">${getCardFramedImageHtml(duel.targetCardId, 'frame-lg')}</div>
           <div class="card-name">${CARD_NAMES[duel.targetCardId] || duel.targetCardId}</div>
         </div>
       </div>
@@ -1327,7 +1327,7 @@ function showCardPopup(cardId, cardName, isHidden, optScore, optEffect) {
     // 修复：不再依赖 CARDS 全局变量（客户端不存在）
     const vis = getCardVisual(cardId);
     popup.innerHTML = `<div class="card-popup-content rarity-${getCardRarity(cardId)}">
-      <div class="card-popup-emoji">${getCardImageHtml(cardId, 'card-img-xl')}</div>
+      <div class="card-popup-emoji">${getCardFramedImageHtml(cardId, 'frame-xl')}</div>
       <div class="card-popup-name">${cardName}</div>
       <div class="card-popup-score">★ ${_ps} 分</div>
       <div class="card-popup-effect">${getEffectLabel(_pe)}</div>

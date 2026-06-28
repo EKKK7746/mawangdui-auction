@@ -94,3 +94,13 @@ function getCardImageHtml(cardId, sizeClass) {
   }
   return `<span class="card-emoji-fallback">${vis.emoji}</span>`;
 }
+
+// 返回带展示框的卡牌图片 HTML（用于拍卖展示、弹窗、决斗等完整展示场景）
+function getCardFramedImageHtml(cardId, frameSize) {
+  const vis = getCardVisual(cardId);
+  const fs = frameSize || 'frame-lg';
+  const inner = vis.image
+    ? `<img src="${vis.image}" alt="${vis.emoji} ${cardId}" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=\\'card-emoji-fallback\\'>${vis.emoji}</span>')" />`
+    : `<span class="card-emoji-fallback">${vis.emoji}</span>`;
+  return `<span class="artifact-frame ${fs}">${inner}</span>`;
+}
