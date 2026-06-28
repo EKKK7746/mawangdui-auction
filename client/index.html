@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>马王堆·宝物拍卖</title>
+  <title>琳琅 · 华夏文物拍卖</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,8 +20,8 @@
       <div class="login-container">
         <div class="logo-area">
           <div class="logo-icon">🏺</div>
-          <h1 class="game-title">马王堆·宝物拍卖</h1>
-          <p class="game-subtitle">汉代文物收藏家</p>
+          <h1 class="game-title">琳琅</h1>
+          <p class="game-subtitle">华夏千年·珍宝博弈</p>
         </div>
 
         <div class="login-form">
@@ -172,288 +172,286 @@
     <div id="introModal" class="modal-overlay" style="display:none;">
       <div class="modal-box intro-modal">
         <button class="modal-close" onclick="closeIntro()">✕</button>
-        <h2 class="intro-title">🏺 马王堆·宝物拍卖</h2>
+        <h2 class="intro-title">💎 琳琅 · 华夏文物拍卖</h2>
 
         <div class="intro-section">
           <h3>🎮 游戏简介</h3>
-          <p>马王堆·宝物拍卖是一款支持2-6人的策略桌游。玩家通过竞标成为拍卖师，租用骰子争夺汉代文物卡牌，最终以收藏总分决胜负。</p>
+          <p>「琳琅」是一款支持2-6人的策略拍卖桌游。玩家穿越华夏五千年，竞标成为拍卖师、租用骰子争夺从商周青铜到明清瓷器的珍贵文物，终局总分最高者加冕"琳琅之主"。</p>
         </div>
 
         <div class="intro-section">
           <h3>📋 游戏流程</h3>
           <p>每轮开始时，玩家竞标拍卖师资格（报出最低的佣金比例）。当选拍卖师展示一张文物卡后，其他玩家秘密租用骰子（d4/d6/d12/d20），骰子点数最高者获得该文物。拍卖师不参与掷骰，但可按佣金比例收取其他玩家的骰子租用费作为收入。</p>
-          <p>连任拍卖师会递增惩罚：连续第2次当选扣$1、第3次扣$2，以此类推，防止同一玩家长期垄断拍卖师位置。</p>
-          <p>持有特殊卡牌组合可触发强力效果：龙凤帛画联动（1分卡全部+1分）、君幸食漆盘+耳杯重掷、对书俑升级骰子、市券佣金翻倍等。游戏共10轮，每局从20张文物卡池中随机抽取10张，终局时收藏总分最高者获胜，剩余资金仅用于平局决胜。</p>
+          <p>连任拍卖师会递增惩罚：连续第2次当选扣$1、第3次扣$2，以此类推。</p>
+          <p>持有特殊卡牌组合可触发强力效果：兰亭序+快雪时晴帖联动（1分卡全部+1分）、汝窑天青釉+甲骨卜辞重掷、敦煌飞天升级骰子、市券佣金翻倍等。游戏共10轮，每局从20张文物卡池中随机抽取10张。</p>
         </div>
 
         <div class="intro-section">
           <h3>🏛️ 文化背景</h3>
-          <p>马王堆汉墓位于湖南省长沙市芙蓉区，是西汉初期长沙国丞相利苍及其家族的墓葬群。1972年至1974年间考古发掘出土了大量珍贵文物，包括素纱襌衣、T形帛画、漆器、竹简、帛书等3000余件，震惊世界。</p>
-          <p>马王堆出土文物现收藏于湖南省博物馆（今湖南博物院），是该馆最具代表性的常设展览之一。本游戏中的十件文物均取材于马王堆及湖南地区出土的珍贵历史文物，玩家将在拍卖与博弈中感受两千年前的文明辉煌。</p>
+          <p>中华文明五千年，璨若星河。「琳琅」——取"琳琅满目"之意，精选商周青铜、秦汉兵马俑、晋唐书画、宋元瓷器、明清珍玩等二十件代表性文物，横跨三千年时光。</p>
+          <p>每一张文物卡都附有真实的历史背景与考古知识。在拍卖与博弈的乐趣中，感受华夏文明的博大精深。文物不只在博物馆的展柜里——它们在玩家的指尖流转，在每一次掷骰的惊险中重生。</p>
         </div>
 
         <div class="intro-section">
-          <h3>🏺 文物介绍</h3>
+          <h3>💎 文物介绍（20张卡池，每局随机10张）</h3>
           <div class="intro-cards-list">
 
-            <!-- 素纱襌衣 -->
+            <!-- 青铜神树 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/ssdc.png" alt="素纱襌衣">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🌳</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>素纱襌衣</strong>
+                  <strong>青铜神树</strong>
                   <span class="intro-card-score">3分</span>
                 </div>
-                <p class="intro-card-artifact">素纱襌衣，西汉长沙国利苍妻辛追墓出土。衣长128cm，袖长190cm，重仅49克，折叠可塞入火柴盒。是世界上最轻的古代丝织品，展现了西汉缫丝技术的巅峰。</p>
+                <p class="intro-card-artifact">商代古蜀文明遗珍，出土于四川广汉三星堆。树高近四米，枝头立神鸟、树干盘游龙，是古蜀人沟通天地的精神图腾。</p>
                 <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>
 
-            <!-- 皿方罍 -->
+            <!-- 兵马俑 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/mfl.png" alt="皿方罍">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🗿</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>皿方罍</strong>
+                  <strong>兵马俑</strong>
                   <span class="intro-card-score">3分</span>
                 </div>
-                <p class="intro-card-artifact">皿方罍，商代晚期青铜盛酒器。1919年出土于湖南桃源，器身与盖分离近百年。器身饰兽面纹，铸造工艺登峰造极。</p>
+                <p class="intro-card-artifact">秦代陶塑巅峰，发现于陕西临潼秦始皇陵。八千真人大小陶俑组成地下军团，千人千面无一雷同，被誉为"世界第八大奇迹"。</p>
+                <p class="intro-card-effect">无特殊效果</p>
+              </div>
+            </div>
+
+            <!-- 清明上河图 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">📜</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>清明上河图</strong>
+                  <span class="intro-card-score">3分</span>
+                </div>
+                <p class="intro-card-artifact">北宋张择端绘，纵24.8cm横528.7cm，描摹汴京清明时节的繁华景象。人物逾八百、舟车数十，是中国古代风俗画巅峰。</p>
+                <p class="intro-card-effect effect-special">【终局加分】持有时终局计分额外+2分</p>
+              </div>
+            </div>
+
+            <!-- 四羊方尊 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🐏</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>四羊方尊</strong>
+                  <span class="intro-card-score">3分</span>
+                </div>
+                <p class="intro-card-artifact">商代晚期青铜礼器，1938年出土于湖南宁乡。器身四角各铸一羊，寓"吉祥四方"。造型雄奇、铸造精绝，是商代青铜艺术最高成就之一。</p>
                 <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>
 
             <!-- 双鸾双兽镜 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/slj.png" alt="双鸾双兽镜">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🪞</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
                   <strong>双鸾双兽镜</strong>
                   <span class="intro-card-score">2分</span>
                 </div>
-                <p class="intro-card-artifact">双鸾双兽镜，西汉铜镜精品。镜背铸有双鸾双兽纹饰，造型灵动。镜中世界暗藏玄机——持有此镜者，终局时可发起"镜中决斗"，与对手各押一宝，出价高者夺得对方珍品。</p>
-                <p class="intro-card-effect effect-special">【决斗】游戏结束时，持有者可向任意对手发起决斗——双方各出价，出价高者夺得对方一张卡牌！</p>
+                <p class="intro-card-artifact">汉代铜镜精品，镜背铸有双鸾双兽纹饰，造型灵动。镜中世界暗藏玄机——持有此镜者，终局时可发起"镜中决斗"，与对手各押一宝，出价高者夺得对方珍品。</p>
+                <p class="intro-card-effect effect-special">【决斗】终局时向任意对手发起决斗——双方各出价，出价高者夺得对方一张卡牌！</p>
               </div>
             </div>
 
-            <!-- 神兽玉樽 -->
+            <!-- 金缕玉衣 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/ssyz.png" alt="神兽玉樽">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">💎</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>神兽玉樽</strong>
+                  <strong>金缕玉衣</strong>
                   <span class="intro-card-score">2分</span>
                 </div>
-                <p class="intro-card-artifact">神兽玉樽，西汉贵族酒器。以和田白玉雕琢，器身浮雕青龙白虎朱雀玄武四神兽。是西汉"事死如生"丧葬观念的物证。</p>
+                <p class="intro-card-artifact">汉代帝王丧葬殓服，以金丝连缀两千余片和田玉片，耗时十年方成。现存最完整一件出土于河北满城汉墓。</p>
                 <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>
 
-            <!-- 龙凤帛画 -->
+            <!-- 兰亭序 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/lfh.png" alt="龙凤帛画">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🖌️</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>龙凤帛画</strong>
-                  <span class="intro-card-score">1分</span>
-                </div>
-                <p class="intro-card-artifact">龙凤帛画，战国楚墓出土。画中龙凤飞舞，引导墓主人灵魂升天。是中国现存最早的绢帛绘画之一。</p>
-                <p class="intro-card-effect effect-positive">【联动】与御龙帛画同时持有：所有1分卡+1分</p>
-              </div>
-            </div>
-
-            <!-- 御龙帛画 -->
-            <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/yulb.png" alt="御龙帛画">
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>御龙帛画</strong>
+                  <strong>兰亭序</strong>
                   <span class="intro-card-score">2分</span>
                 </div>
-                <p class="intro-card-artifact">御龙帛画，战国楚墓出土。男子御龙驰骋天际，龙、鹭、鱼相伴。与龙凤帛画并称"楚帛双璧"。</p>
-                <p class="intro-card-effect effect-positive">【联动】与龙凤帛画同时持有：所有1分卡+1分</p>
+                <p class="intro-card-artifact">东晋王羲之书，永和九年作于会稽山阴。通篇324字，"飘若浮云，矫若惊龙"，被誉为"天下第一行书"。</p>
+                <p class="intro-card-effect effect-positive">【联动】与快雪时晴帖同时持有：所有1分卡+1分</p>
               </div>
             </div>
 
-            <!-- 君幸食漆盘 -->
+            <!-- 曾侯乙编钟 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/jxsp.png" alt="君幸食漆盘">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🔔</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>君幸食漆盘</strong>
-                  <span class="intro-card-score">1分</span>
-                </div>
-                <p class="intro-card-artifact">君幸食漆盘。"君幸食"意为"请愉快用餐"。马王堆出土漆器逾500件，反映了西汉贵族精致的生活品味。</p>
-                <p class="intro-card-effect effect-positive">【联动】与君幸酒耳杯同时持有：掷骰可重掷取高值</p>
-              </div>
-            </div>
-
-            <!-- 君幸酒耳杯 -->
-            <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/jxjeb.png" alt="君幸酒耳杯">
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>君幸酒耳杯</strong>
+                  <strong>曾侯乙编钟</strong>
                   <span class="intro-card-score">2分</span>
                 </div>
-                <p class="intro-card-artifact">君幸酒耳杯。"君幸酒"意为"请愉快饮酒"。耳杯因两侧新月形耳而得名，是汉代最流行的饮酒器。</p>
-                <p class="intro-card-effect effect-positive">【联动】与君幸食漆盘同时持有：掷骰可重掷取高值</p>
+                <p class="intro-card-artifact">战国早期青铜礼乐器，1978年出土于湖北随州。全套65件总重逾2500公斤，音域跨越五个半八度，是世界音乐史最伟大的考古发现之一。</p>
+                <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>
 
-            <!-- 对书俑 -->
+            <!-- 影青盏 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/dsy.png" alt="对书俑">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🍵</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>对书俑</strong>
+                  <strong>影青盏</strong>
+                  <span class="intro-card-score">2分</span>
+                </div>
+                <p class="intro-card-artifact">宋代景德镇青白瓷精品。釉色介于青白之间，薄如纸、明如镜、声如磬。宋人崇尚简约之美，影青瓷正是这种审美理想的化身。</p>
+                <p class="intro-card-effect">无特殊效果</p>
+              </div>
+            </div>
+
+            <!-- 元青花 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🏺</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>元青花</strong>
+                  <span class="intro-card-score">2分</span>
+                </div>
+                <p class="intro-card-artifact">元代景德镇创烧的釉下彩瓷，以进口"苏麻离青"钴料绘制。蓝白相间、浓淡相宜，开创中国瓷器彩绘新纪元。</p>
+                <p class="intro-card-effect effect-positive">【重掷】独立生效：掷骰可重掷取高值</p>
+              </div>
+            </div>
+
+            <!-- 敦煌壁画 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🛡️</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>敦煌壁画</strong>
+                  <span class="intro-card-score">2分</span>
+                </div>
+                <p class="intro-card-artifact">莫高窟735个洞窟、4.5万平方米壁画，千年佛光护佑。持有壁画者担任拍卖师时连任惩罚减半。</p>
+                <p class="intro-card-effect effect-special">【惩罚减免】担任拍卖师时连任惩罚减半</p>
+              </div>
+            </div>
+
+            <!-- 汝窑天青釉 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🫖</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>汝窑天青釉</strong>
+                  <span class="intro-card-score">2分</span>
+                </div>
+                <p class="intro-card-artifact">宋代五大名窑之首，釉色"雨过天青云破处"。传世不足百件、件件国宝。与甲骨卜辞同时持有，掷骰可重掷取高值。</p>
+                <p class="intro-card-effect effect-positive">【联动】与甲骨卜辞同时持有：掷骰可重掷取高值</p>
+              </div>
+            </div>
+
+            <!-- 快雪时晴帖 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">❄️</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>快雪时晴帖</strong>
                   <span class="intro-card-score">1分</span>
                 </div>
-                <p class="intro-card-artifact">对书俑，西晋时期陶瓷俑。两人对坐，一人执笔书写，一人手捧简册审校。是中国现存最早的书生形象陶瓷雕塑。</p>
+                <p class="intro-card-artifact">王羲之致友人短札，仅三行二十八字。现存最可靠的王羲之真迹摹本，与兰亭序并藏触发联动：所有1分卡各加1分。</p>
+                <p class="intro-card-effect effect-positive">【联动】与兰亭序同时持有：所有1分卡+1分</p>
+              </div>
+            </div>
+
+            <!-- 甲骨卜辞 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🐢</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>甲骨卜辞</strong>
+                  <span class="intro-card-score">1分</span>
+                </div>
+                <p class="intro-card-artifact">商代王室占卜记录，刻于龟甲兽骨之上，是汉字最早的成熟形态。与汝窑天青釉同时持有，掷骰可重掷取高值。</p>
+                <p class="intro-card-effect effect-positive">【联动】与汝窑天青釉同时持有：掷骰可重掷取高值</p>
+              </div>
+            </div>
+
+            <!-- 敦煌飞天 -->
+            <div class="intro-card-row">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🧚</div>
+              <div class="intro-card-body">
+                <div class="intro-card-header">
+                  <strong>敦煌飞天</strong>
+                  <span class="intro-card-score">1分</span>
+                </div>
+                <p class="intro-card-artifact">莫高窟壁画中最灵动的形象。飞天手持乐器或花篮，衣带当风、翩翩起舞，融合印度佛教天人形象与中国道教羽人传统。</p>
                 <p class="intro-card-effect effect-special">【限一次】掷骰前免费升级骰子一级（d20不可升级）</p>
               </div>
             </div>
 
             <!-- 市券 -->
             <div class="intro-card-row">
-              <img class="intro-card-img" src="assets/cards/sq.png" alt="市券">
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">📜</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
                   <strong>市券</strong>
                   <span class="intro-card-score">1分</span>
                 </div>
-                <p class="intro-card-artifact">市券，汉代商业凭证。汉代"市"为官方设立的市场，交易者须持市券。持券者担任拍卖师时可获双倍佣金。</p>
+                <p class="intro-card-artifact">汉代商业凭证。汉代"市"为官方指定的交易场所，入市须持市券，相当于古代的市场许可证。持券者担任拍卖师时可获双倍佣金。</p>
                 <p class="intro-card-effect effect-special">【佣金翻倍】担任拍卖师时佣金收入翻倍</p>
               </div>
             </div>
 
-            <!-- ↓↓↓ 扩充卡牌（每局随机抽取，以下卡牌不一定每局出现） ↓↓↓ -->
-
-            <!-- T形帛画 -->
+            <!-- 三彩驼 -->
             <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">📜</div>
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🐪</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>T形帛画</strong>
-                  <span class="intro-card-score">3分</span>
-                </div>
-                <p class="intro-card-artifact">T形帛画，马王堆一号汉墓出土。帛画呈T形，描绘天上、人间、地下三界，是汉代绘画艺术的巅峰之作。</p>
-                <p class="intro-card-effect effect-special">【终局加分】持有时终局计分额外+2分</p>
-              </div>
-            </div>
-
-            <!-- 铜鼎 -->
-            <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🏺</div>
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>铜鼎</strong>
-                  <span class="intro-card-score">3分</span>
-                </div>
-                <p class="intro-card-artifact">铜鼎，马王堆汉墓出土青铜礼器。鼎为古代国之重器，象征权力与地位。此鼎铸造精良，器形庄重。</p>
-                <p class="intro-card-effect">无特殊效果</p>
-              </div>
-            </div>
-
-            <!-- 玳瑁樽 -->
-            <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🐢</div>
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>玳瑁樽</strong>
-                  <span class="intro-card-score">2分</span>
-                </div>
-                <p class="intro-card-artifact">玳瑁樽，马王堆出土玳瑁质酒器。玳瑁为海龟甲壳，色泽温润。持有此樔者，掷骰时可窥探天机。</p>
-                <p class="intro-card-effect effect-positive">【重掷】独立生效：掷骰可重掷取高值</p>
-              </div>
-            </div>
-
-            <!-- 漆奁盒 -->
-            <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🛡️</div>
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>漆奁盒</strong>
-                  <span class="intro-card-score">2分</span>
-                </div>
-                <p class="intro-card-artifact">漆奁盒，马王堆出土双层漆奁。奁为古代女子梳妆盒，此奁设计精巧，内含多个小盒。</p>
-                <p class="intro-card-effect effect-special">【惩罚减免】担任拍卖师时连任惩罚减半</p>
-              </div>
-            </div>
-
-            <!-- 云纹漆钫 -->
-            <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🍶</div>
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>云纹漆钫</strong>
-                  <span class="intro-card-score">2分</span>
-                </div>
-                <p class="intro-card-artifact">云纹漆钫，马王堆出土漆器。钫为方形酒器，器身绘有飘逸云纹，体现了汉代漆器工艺的高超水平。</p>
-                <p class="intro-card-effect">无特殊效果</p>
-              </div>
-            </div>
-
-            <!-- 玉璧 -->
-            <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">⚪</div>
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>玉璧</strong>
-                  <span class="intro-card-score">2分</span>
-                </div>
-                <p class="intro-card-artifact">玉璧，马王堆出土玉器。璧为古代礼天之器，"苍璧礼天"源自周礼。玉质温润，纹饰古朴。</p>
-                <p class="intro-card-effect">无特殊效果</p>
-              </div>
-            </div>
-
-            <!-- 彩绘木俑 -->
-            <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🧱</div>
-              <div class="intro-card-body">
-                <div class="intro-card-header">
-                  <strong>彩绘木俑</strong>
+                  <strong>三彩驼</strong>
                   <span class="intro-card-score">1分</span>
                 </div>
-                <p class="intro-card-artifact">彩绘木俑，马王堆汉墓出土大量木俑。木俑为陪葬明器，象征仆从侍女。</p>
+                <p class="intro-card-artifact">唐代三彩釉陶精品。骆驼昂首嘶鸣，背上驮着丝绸、瓷器与西域香料——它是丝绸之路最鲜活的缩影。每轮可获$1商旅补给。</p>
                 <p class="intro-card-effect effect-positive">【被动收入】每轮结束时额外获得$1</p>
               </div>
             </div>
 
-            <!-- 瑟 -->
+            <!-- 鸡缸杯 -->
             <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🎵</div>
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🍷</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>瑟</strong>
+                  <strong>鸡缸杯</strong>
                   <span class="intro-card-score">1分</span>
                 </div>
-                <p class="intro-card-artifact">瑟，马王堆汉墓出土乐器。瑟为古代拨弦乐器，二十五弦。墓中出土的瑟是现存最早的完整瑟之一。</p>
+                <p class="intro-card-artifact">明成化斗彩瓷巅峰之作。杯身绘子母鸡图，胎薄釉润，万历时已"值钱十万"。2014年一件以2.8亿港元成交，轰动全球。</p>
                 <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>
 
-            <!-- 博山炉 -->
+            <!-- 金瓯永固杯 -->
             <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">⛰️</div>
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">🏆</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>博山炉</strong>
+                  <strong>金瓯永固杯</strong>
                   <span class="intro-card-score">1分</span>
                 </div>
-                <p class="intro-card-artifact">博山炉，汉代熏香器具。炉盖铸成山形，香烟从山间缝隙飘出，如仙山云雾。是汉代神仙思想的物证。</p>
+                <p class="intro-card-artifact">清乾隆年间御制金器。以黄金打造，镶嵌珍珠宝石，杯身刻"金瓯永固"四字，寓江山永固之意。清代宫廷工艺集大成之作。</p>
                 <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>
 
-            <!-- 缯书 -->
+            <!-- 沉香雕笔 -->
             <div class="intro-card-row">
-              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">📖</div>
+              <div class="intro-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F0E8,#E8DFD0);font-size:32px;border-radius:6px;">✒️</div>
               <div class="intro-card-body">
                 <div class="intro-card-header">
-                  <strong>缯书</strong>
+                  <strong>沉香雕笔</strong>
                   <span class="intro-card-score">1分</span>
                 </div>
-                <p class="intro-card-artifact">缯书，马王堆汉墓出土帛书。书写于丝帛之上的文献，内容涉及天文、地理、医学，是研究西汉文化的珍贵资料。</p>
+                <p class="intro-card-artifact">明代文房珍宝。以沉香木雕刻而成，笔杆饰山水人物。明代士大夫崇尚雅致生活，此笔承载千年文人的书斋清梦。</p>
                 <p class="intro-card-effect">无特殊效果</p>
               </div>
             </div>

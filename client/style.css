@@ -1,6 +1,6 @@
 /* ============================================================
-   style.css — 马王堆·宝物拍卖 移动端优先样式
-   颜色主题：铜绿 #5B7B5E / 朱红 #C43A31 / 绢帛米白 #F5F0E8
+   style.css — 琳琅 移动端优先极简样式
+   颜色主题：墨灰 #2C2C2C / 深金 #C9A96E / 素白 #FAFAFA
    ============================================================ */
 
 /* -------------------- Reset & Base -------------------- */
@@ -20,8 +20,8 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
-  background-color: #F5F0E8;
-  color: #3C2415;
+  background-color: #FAFAFA;
+  color: #2C2C2C;
   line-height: 1.6;
   min-height: 100vh;
   display: flex;
@@ -55,21 +55,21 @@ body {
 .input-primary {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #D4CFC4;
+  border: 1.5px solid #E0E0E0;
   border-radius: 8px;
   font-size: 16px;
   background: #FFFFFF;
-  color: #3C2415;
+  color: #2C2C2C;
   outline: none;
   transition: border-color 0.2s;
 }
 
 .input-primary:focus {
-  border-color: #C43A31;
+  border-color: #8B2252;
 }
 
 .input-primary::placeholder {
-  color: #B8A99A;
+  color: #B0B0B0;
 }
 
 .btn {
@@ -84,7 +84,7 @@ body {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   white-space: nowrap;
 }
 
@@ -99,37 +99,37 @@ body {
 }
 
 .btn-primary {
-  background: #C43A31;
+  background: #8B2252;
   color: #FFFFFF;
 }
 
 .btn-primary:not(:disabled):hover {
-  background: #A8322A;
+  background: #701A40;
 }
 
 .btn-secondary {
-  background: #5B7B5E;
+  background: #3C3C3C;
   color: #FFFFFF;
 }
 
 .btn-secondary:not(:disabled):hover {
-  background: #4A6A4D;
+  background: #2C2C2C;
 }
 
 .btn-outline {
   background: transparent;
-  color: #C43A31;
-  border: 2px solid #C43A31;
+  color: #8B2252;
+  border: 1.5px solid #8B2252;
 }
 
 .btn-outline:active {
-  background: rgba(196, 58, 49, 0.08);
+  background: rgba(139, 34, 82, 0.06);
 }
 
 .btn-danger {
   background: transparent;
   color: #999;
-  border: 1px solid #D4CFC4;
+  border: 1px solid #E0E0E0;
 }
 
 .btn-danger:active {
@@ -153,16 +153,16 @@ body {
 .divider-line {
   flex: 1;
   height: 1px;
-  background: #D4CFC4;
+  background: #E0E0E0;
 }
 
 .divider-text {
   font-size: 14px;
-  color: #B8A99A;
+  color: #B0B0B0;
 }
 
 .error-msg {
-  color: #C43A31;
+  color: #8B2252;
   font-size: 14px;
   text-align: center;
   min-height: 20px;
@@ -186,22 +186,21 @@ body {
 }
 
 .logo-icon {
-  font-size: 56px;
+  font-size: 48px;
   margin-bottom: 12px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 
 .game-title {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 700;
-  color: #C43A31;
-  letter-spacing: 2px;
+  color: #2C2C2C;
+  letter-spacing: 6px;
   margin-bottom: 6px;
 }
 
 .game-subtitle {
-  font-size: 16px;
-  color: #5B7B5E;
+  font-size: 14px;
+  color: #8B2252;
   letter-spacing: 4px;
 }
 
@@ -213,7 +212,7 @@ body {
   padding: 24px;
   background: #FFFFFF;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F0F0F0;
 }
 
 .join-row {
@@ -241,19 +240,19 @@ body {
   padding: 20px;
   background: #FFFFFF;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F0F0F0;
 }
 
 .room-id-label {
   font-size: 14px;
-  color: #B8A99A;
+  color: #B0B0B0;
   margin-bottom: 6px;
 }
 
 .room-id-value {
   font-size: 36px;
   font-weight: 700;
-  color: #C43A31;
+  color: #8B2252;
   letter-spacing: 8px;
   margin-bottom: 12px;
 }
@@ -262,14 +261,14 @@ body {
   background: #FFFFFF;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F0F0F0;
   flex: 1;
 }
 
 .section-title {
   font-size: 18px;
   font-weight: 600;
-  color: #3C2415;
+  color: #2C2C2C;
   margin-bottom: 12px;
 }
 
@@ -305,14 +304,14 @@ body {
 
 .player-list .you-tag {
   font-size: 12px;
-  color: #5B7B5E;
+  color: #666;
   margin-left: 4px;
 }
 
 .waiting-text {
   text-align: center;
   font-size: 16px;
-  color: #B8A99A;
+  color: #B0B0B0;
   padding: 8px;
 }
 
@@ -402,15 +401,15 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  background: #3C2415;
-  border-radius: 10px;
-  color: #F5F0E8;
+  background: #2C2C2C;
+  border-radius: 8px;
+  color: #FFFFFF;
   font-size: 14px;
   font-weight: 600;
 }
 
 .game-round { color: #C9A96E; }
-.game-phase { color: #F5F0E8; }
+.game-phase { color: #FFFFFF; }
 
 /* --- 卡牌展示区 --- */
 
@@ -424,29 +423,27 @@ body {
   width: 100%;
   max-width: 280px;
   background: #FFFFFF;
-  border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  border: 1px solid #EEEEEE;
   overflow: hidden;
-  border: 2px solid #E8E0D0;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.3s;
 }
 
 .artifact-card.winner {
   border-color: #C9A96E;
-  box-shadow: 0 4px 24px rgba(201, 169, 110, 0.4);
 }
 
 .card-visual {
   position: relative;
-  height: 120px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #F5F0E8 0%, #E8DCC8 100%);
+  background: #FAFAFA;
 }
 
 .card-emoji {
-  font-size: 56px;
+  font-size: 48px;
 }
 
 .card-badge {
@@ -461,8 +458,8 @@ body {
 }
 
 .card-badge.rare { background: #C9A96E; }
-.card-badge.legendary { background: #C43A31; }
-.card-badge.common { background: #5B7B5E; }
+.card-badge.legendary { background: #8B2252; }
+.card-badge.common { background: #666; }
 
 .card-body {
   padding: 12px 16px;
@@ -472,19 +469,19 @@ body {
 .card-name {
   font-size: 20px;
   font-weight: 700;
-  color: #3C2415;
+  color: #2C2C2C;
   margin-bottom: 4px;
 }
 
 .card-score {
   font-size: 14px;
-  color: #B8A99A;
+  color: #B0B0B0;
   margin-bottom: 4px;
 }
 
 .card-effect {
   font-size: 13px;
-  color: #C43A31;
+  color: #8B2252;
   font-weight: 500;
   min-height: 18px;
 }
@@ -498,23 +495,22 @@ body {
   background: #FFFFFF;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #EEEEEE;
   min-height: 120px;
-  transition: box-shadow 0.3s, border-color 0.3s;
-  border: 2px solid transparent;
+  transition: border-color 0.2s;
   position: relative;
   z-index: 5;
 }
 
 .game-action-area.my-turn {
-  border-color: #C43A31;
-  box-shadow: 0 0 16px rgba(196, 58, 49, 0.20);
+  border-color: #C9A96E;
+  background: #FFFDF7;
 }
 
 .game-action-area .action-title {
   font-size: 15px;
   font-weight: 600;
-  color: #3C2415;
+  color: #2C2C2C;
   margin-bottom: 12px;
   text-align: center;
 }
@@ -534,7 +530,7 @@ body {
   background: #FFFFFF;
   font-size: 18px;
   font-weight: 700;
-  color: #3C2415;
+  color: #2C2C2C;
   cursor: pointer;
   transition: all 0.15s;
   display: flex;
@@ -555,7 +551,7 @@ body {
 .bid-btn .bid-hint {
   font-size: 11px;
   font-weight: 400;
-  color: #B8A99A;
+  color: #B0B0B0;
 }
 
 /* --- 选卡列表 --- */
@@ -580,12 +576,12 @@ body {
   min-height: 44px;
 }
 
-.select-card-item:active { border-color: #C43A31; transform: scale(0.97); }
+.select-card-item:active { border-color: #8B2252; transform: scale(0.97); }
 
 .select-card-item .sc-emoji { font-size: 24px; flex-shrink: 0; }
 .select-card-item .sc-info { min-width: 0; }
-.select-card-item .sc-name { font-size: 14px; font-weight: 600; color: #3C2415; }
-.select-card-item .sc-meta { font-size: 12px; color: #B8A99A; }
+.select-card-item .sc-name { font-size: 14px; font-weight: 600; color: #2C2C2C; }
+.select-card-item .sc-meta { font-size: 12px; color: #B0B0B0; }
 
 /* --- 骰子按钮 --- */
 
@@ -613,8 +609,8 @@ body {
 .dice-btn:active { transform: scale(0.95); background: #F5F0E8; }
 .dice-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; background: #F5F0E8; }
 
-.dice-btn .dice-name { font-size: 20px; font-weight: 700; color: #3C2415; }
-.dice-btn .dice-cost { font-size: 12px; color: #B8A99A; }
+.dice-btn .dice-name { font-size: 20px; font-weight: 700; color: #2C2C2C; }
+.dice-btn .dice-cost { font-size: 12px; color: #B0B0B0; }
 .dice-btn .dice-ev { font-size: 11px; color: #5B7B5E; }
 
 .dice-btn.pass-btn-full {
@@ -627,11 +623,11 @@ body {
 }
 
 .dice-btn.upgrade {
-  border-color: #C43A31;
+  border-color: #8B2252;
   background: #FFF5F5;
 }
 
-.dice-btn.upgrade .dice-name { color: #C43A31; }
+.dice-btn.upgrade .dice-name { color: #8B2252; }
 
 /* --- 掷骰结果 --- */
 
@@ -657,12 +653,12 @@ body {
   background: #FFF9ED;
 }
 
-.roll-player .roll-nick { font-weight: 600; color: #3C2415; }
-.roll-player .roll-dice { font-size: 14px; color: #B8A99A; }
+.roll-player .roll-nick { font-weight: 600; color: #2C2C2C; }
+.roll-player .roll-dice { font-size: 14px; color: #B0B0B0; }
 .roll-player .roll-value {
   font-size: 22px;
   font-weight: 700;
-  color: #C43A31;
+  color: #8B2252;
   min-width: 32px;
   text-align: center;
 }
@@ -686,20 +682,20 @@ body {
 .settle-winner {
   font-size: 18px;
   font-weight: 700;
-  color: #C43A31;
+  color: #8B2252;
   margin-bottom: 4px;
 }
 
 .settle-card {
   font-size: 15px;
-  color: #3C2415;
+  color: #2C2C2C;
   margin-bottom: 12px;
 }
 
 .btn-next-round {
   width: 100%;
   padding: 14px;
-  background: #C43A31;
+  background: #8B2252;
   color: #FFF;
   border: none;
   border-radius: 10px;
@@ -739,7 +735,7 @@ body {
 .dice-upgrade-preview {
   font-size: 12px;
   font-weight: 700;
-  color: #D4A017;
+  color: #C9A96E;
   margin-left: 2px;
 }
 
@@ -758,7 +754,7 @@ body {
 }
 .duel-header h3 {
   font-size: 22px;
-  color: #C43A31;
+  color: #8B2252;
   margin: 0 0 4px;
 }
 .duel-desc {
@@ -782,7 +778,7 @@ body {
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-  color: #3C2415;
+  color: #2C2C2C;
   transition: background 0.2s, transform 0.15s;
 }
 .duel-target-btn:hover { background: #FFF9F0; }
@@ -883,7 +879,7 @@ body {
   width: 36px;
   height: 36px;
   border: 3px solid #F0EDE4;
-  border-top-color: #C43A31;
+  border-top-color: #8B2252;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -894,7 +890,7 @@ body {
 
 .waiting-label {
   font-size: 15px;
-  color: #B8A99A;
+  color: #B0B0B0;
 }
 
 /* --- 我的状态栏 --- */
@@ -904,9 +900,9 @@ body {
   align-items: center;
   gap: 16px;
   padding: 10px 16px;
-  background: #3C2415;
+  background: #2C2C2C;
   border-radius: 10px;
-  color: #F5F0E8;
+  color: #FFFFFF;
   font-size: 15px;
   font-weight: 600;
 }
@@ -919,7 +915,7 @@ body {
 
 .my-status-item .effect-tag {
   font-size: 11px;
-  background: #C43A31;
+  background: #8B2252;
   color: #FFF;
   padding: 2px 6px;
   border-radius: 6px;
@@ -931,7 +927,7 @@ body {
 .game-other-players {
   background: #FFFFFF;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #EEEEEE;
   overflow: hidden;
 }
 
@@ -939,7 +935,7 @@ body {
   padding: 12px 16px;
   font-size: 15px;
   font-weight: 600;
-  color: #3C2415;
+  color: #2C2C2C;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -952,7 +948,7 @@ body {
   content: '▼';
   font-size: 12px;
   transition: transform 0.25s;
-  color: #B8A99A;
+  color: #B0B0B0;
 }
 
 .other-toggle.collapsed::after {
@@ -986,11 +982,11 @@ body {
 }
 
 .pl-nick {
-  font-weight: 600; color: #3C2415;
+  font-weight: 600; color: #2C2C2C;
   display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
 }
-.pl-stats { color: #B8A99A; font-size: 13px; }
-.pl-expand-icon { font-size: 10px; color: #B8A99A; transition: transform 0.2s; }
+.pl-stats { color: #B0B0B0; font-size: 13px; }
+.pl-expand-icon { font-size: 10px; color: #B0B0B0; transition: transform 0.2s; }
 
 .player-detail {
   max-height: 0; overflow: hidden;
@@ -1058,9 +1054,9 @@ body {
 .rank-3 .rank-num { color: #CD7F32; }
 
 .rank-info { flex: 1; }
-.rank-name { font-weight: 600; color: #3C2415; }
-.rank-detail { font-size: 12px; color: #B8A99A; }
-.rank-score { font-size: 20px; font-weight: 700; color: #C43A31; }
+.rank-name { font-weight: 600; color: #2C2C2C; }
+.rank-detail { font-size: 12px; color: #B0B0B0; }
+.rank-score { font-size: 20px; font-weight: 700; color: #8B2252; }
 
 /* -------------------- Bot 样式 -------------------- */
 
@@ -1122,13 +1118,13 @@ body {
 
 .toast.info {
   background: #E8F4E8;
-  color: #5B7B5E;
+  color: #666;
   border: 1px solid #B8D4B8;
 }
 
 .toast.error {
   background: #FDECEA;
-  color: #C43A31;
+  color: #8B2252;
   border: 1px solid #F5C6C3;
 }
 
@@ -1181,14 +1177,14 @@ body {
   width: 40px;
   height: 40px;
   border: 3px solid #D4CFC4;
-  border-top-color: #C43A31;
+  border-top-color: #8B2252;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 .loading-overlay .loading-text {
   font-size: 15px;
-  color: #3C2415;
+  color: #2C2C2C;
   font-weight: 500;
 }
 
@@ -1280,19 +1276,18 @@ body {
   transition: color 0.2s;
 }
 
-.funds-down { color: #C43A31; }
+.funds-down { color: #8B2252; }
 .funds-up   { color: #5B7B5E; }
 
 /* -------------------- 我的回合脉冲 -------------------- */
 
 @keyframes turnPulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(196, 58, 49, 0.15); }
-  50%      { box-shadow: 0 0 20px rgba(196, 58, 49, 0.35); }
+  0%, 100% { border-color: #C9A96E; }
+  50%      { border-color: #E0C878; }
 }
 
 .game-action-area.my-turn {
   animation: turnPulse 2s ease-in-out infinite;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFFCF2 100%);
 }
 
 /* -------------------- 卡牌稀有度辉光 -------------------- */
@@ -1308,7 +1303,7 @@ body {
 }
 
 .artifact-card.rarity-legendary {
-  border-color: #C43A31;
+  border-color: #8B2252;
   animation: legendaryGlow 2s ease-in-out infinite;
 }
 
@@ -1347,7 +1342,7 @@ body {
   margin-bottom: 12px;
   background: linear-gradient(135deg, #C9A96E 0%, #F5E6C8 50%, #C9A96E 100%);
   border-radius: 12px;
-  color: #3C2415;
+  color: #2C2C2C;
   font-size: 18px;
   font-weight: 700;
 }
@@ -1414,7 +1409,7 @@ body {
 
 .finish-title {
   font-size: 28px;
-  color: #C43A31;
+  color: #8B2252;
   font-weight: 900;
   letter-spacing: 4px;
   margin-bottom: 4px;
@@ -1493,7 +1488,7 @@ body {
 .finish-rank-name {
   font-size: 15px;
   font-weight: 700;
-  color: #3C2415;
+  color: #2C2C2C;
   margin-bottom: 4px;
   display: flex;
   align-items: center;
@@ -1504,7 +1499,7 @@ body {
 .me-tag {
   font-size: 11px;
   font-weight: 500;
-  background: #C43A31;
+  background: #8B2252;
   color: #FFF;
   padding: 1px 6px;
   border-radius: 4px;
@@ -1546,7 +1541,7 @@ body {
 .score-num {
   font-size: 28px;
   font-weight: 900;
-  color: #C43A31;
+  color: #8B2252;
   line-height: 1;
 }
 
@@ -1556,7 +1551,7 @@ body {
 
 .score-label {
   font-size: 11px;
-  color: #B8A99A;
+  color: #B0B0B0;
   letter-spacing: 2px;
 }
 
@@ -1598,7 +1593,7 @@ body {
 .lore-hint {
   font-size: 11px;
   font-weight: 400;
-  color: #B8A99A;
+  color: #B0B0B0;
   margin-left: auto;
 }
 
@@ -1624,7 +1619,7 @@ body {
 .lore-name {
   font-size: 13px;
   font-weight: 700;
-  color: #3C2415;
+  color: #2C2C2C;
 }
 
 .lore-text {
@@ -1658,7 +1653,7 @@ body {
 }
 
 .finish-btn-restart {
-  background: #C43A31;
+  background: #8B2252;
   color: #FFF;
   box-shadow: 0 4px 16px rgba(196, 58, 49, 0.3);
 }
@@ -1669,8 +1664,8 @@ body {
 
 .finish-btn-lobby {
   background: transparent;
-  color: #C43A31;
-  border: 2px solid #C43A31;
+  color: #8B2252;
+  border: 2px solid #8B2252;
 }
 
 .finish-btn-lobby:hover {
@@ -1729,7 +1724,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #B8A99A;
+  background: #B0B0B0;
 }
 
 /* -------------------- 玩家列表滑入 -------------------- */
@@ -1796,13 +1791,13 @@ body {
     0 12px 36px rgba(0,0,0,0.32),
     0 0 20px rgba(212,175,55,0.22);
   display: flex; align-items: center; justify-content: center;
-  font-size: 42px; font-weight: 900; color: #C43A31;
+  font-size: 42px; font-weight: 900; color: #8B2252;
   position: relative; overflow: hidden;
 }
 .qt-popped-slip::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 14px;
-  background: linear-gradient(180deg, #C43A31, #9E2620);
+  background: linear-gradient(180deg, #8B2252, #9E2620);
   border-radius: 4px 4px 0 0;
 }
 
@@ -1989,7 +1984,7 @@ body {
 
 /* --- 签筒标签 --- */
 .qt-label {
-  text-align: center; font-size: 13px; color: #B8A99A;
+  text-align: center; font-size: 13px; color: #B0B0B0;
   margin-top: 8px; font-weight: 600;
   letter-spacing: 1px;
 }
@@ -2013,8 +2008,8 @@ body {
 @keyframes qt-pop {
   0%   { transform: translateY(0) rotate(var(--tilt, 0deg)); color: transparent; opacity: 1; }
   40%  { transform: translateY(-150px) rotate(0deg) scale(1.3); color: transparent; }
-  60%  { transform: translateY(-130px) rotate(0deg) scale(1.15); color: #C43A31; }
-  100% { transform: translateY(-110px) rotate(0deg) scale(1); color: #C43A31; }
+  60%  { transform: translateY(-130px) rotate(0deg) scale(1.15); color: #8B2252; }
+  100% { transform: translateY(-110px) rotate(0deg) scale(1); color: #8B2252; }
 }
 
 /* --- 计分板动画 --- */
@@ -2038,7 +2033,7 @@ body {
 }
 .sb-title {
   text-align: center; font-size: 14px; font-weight: 600;
-  color: #B8A99A; padding: 10px; letter-spacing: 3px;
+  color: #B0B0B0; padding: 10px; letter-spacing: 3px;
 }
 .sb-row {
   display: flex; align-items: center; gap: 8px;
@@ -2055,9 +2050,9 @@ body {
 .sb-row.is-auctioneer { opacity: 0.7; background: #F8F4F0; }
 .sb-row.is-auctioneer .sb-result { color: #888; }
 .sb-rank { width: 28px; text-align: center; font-size: 18px; flex-shrink: 0; }
-.sb-name { flex: 1; font-weight: 600; color: #3C2415; }
-.sb-dice { font-size: 12px; color: #B8A99A; font-family: monospace; width: 28px; }
-.sb-result { font-size: 22px; font-weight: 800; color: #C43A31; width: 36px; text-align: center; }
+.sb-name { flex: 1; font-weight: 600; color: #2C2C2C; }
+.sb-dice { font-size: 12px; color: #B0B0B0; font-family: monospace; width: 28px; }
+.sb-result { font-size: 22px; font-weight: 800; color: #8B2252; width: 36px; text-align: center; }
 
 @keyframes scoreSlideIn {
   from { opacity: 0; transform: translateY(20px); }
@@ -2074,7 +2069,7 @@ body {
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-size: 56px; font-weight: 900;
-  color: #C43A31;
+  color: #8B2252;
   text-shadow: 0 3px 6px rgba(0,0,0,0.3);
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -2103,7 +2098,7 @@ body {
 }
 
 .dice-waiting p {
-  font-size: 15px; color: #B8A99A;
+  font-size: 15px; color: #B0B0B0;
   margin-bottom: 16px;
 }
 
@@ -2120,7 +2115,7 @@ body {
   background: rgba(61, 43, 31, 0.04);
 }
 
-.player-status .ps-item .ps-nick { font-size: 14px; color: #3C2415; }
+.player-status .ps-item .ps-nick { font-size: 14px; color: #2C2C2C; }
 .player-status .ps-item .ps-icon { font-size: 16px; }
 
 @keyframes waitingPulse {
@@ -2154,7 +2149,7 @@ body {
 .card-icon:active { transform: scale(1.15); }
 .card-icon.score-1 { background: #2E5C8A; color: #FFF; }
 .card-icon.score-2 { background: #8B6914; color: #FFF; }
-.card-icon.score-3 { background: #C43A31; color: #FFF; }
+.card-icon.score-3 { background: #8B2252; color: #FFF; }
 .card-icon.score-hidden { background: #6B5B4B; color: #CCC; }
 
 /* ==================== 卡牌详情浮窗 ==================== */
@@ -2178,7 +2173,7 @@ body {
   animation: panelSlideUp 0.25s ease-out;
 }
 .card-popup-emoji { font-size: 48px; margin-bottom: 10px; }
-.card-popup-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; color: #C43A31; }
+.card-popup-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; color: #8B2252; }
 .card-popup-score { font-size: 14px; color: #333333; margin-bottom: 5px; }
 .card-popup-effect { font-size: 12px; color: #666666; margin-bottom: 10px; }
 .card-popup-lore { font-size: 11px; color: #999999; line-height: 1.4; }
@@ -2192,7 +2187,7 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 2px solid #C43A31;
+  border: 2px solid #8B2252;
   background: rgba(196, 58, 49, 0.15);
   font-size: 20px;
   cursor: pointer;
@@ -2245,7 +2240,7 @@ body {
   height: 28px;
   border-radius: 50%;
   border: none;
-  background: #C43A31;
+  background: #8B2252;
   color: #FFF;
   font-size: 18px;
   font-weight: 700;
@@ -2306,7 +2301,7 @@ body {
 }
 .settle-timer-text {
   font-size: 13px;
-  color: #B8A99A;
+  color: #B0B0B0;
   text-align: center;
 }
 
@@ -2344,7 +2339,7 @@ body {
 }
 .room-list-header h3 {
   font-size: 18px;
-  color: #3C2415;
+  color: #2C2C2C;
   font-weight: 700;
   margin: 0;
 }
@@ -2364,7 +2359,7 @@ body {
 }
 .room-list-close:hover {
   background: rgba(196, 58, 49, 0.1);
-  color: #C43A31;
+  color: #8B2252;
 }
 .room-list-body {
   flex: 1;
@@ -2375,7 +2370,7 @@ body {
 .room-list-loading {
   text-align: center;
   padding: 30px;
-  color: #B8A99A;
+  color: #B0B0B0;
   font-size: 14px;
 }
 .room-list-item {
@@ -2405,7 +2400,7 @@ body {
 }
 .room-list-num {
   font-weight: 700;
-  color: #C43A31;
+  color: #8B2252;
   font-size: 16px;
   letter-spacing: 2px;
 }
@@ -2420,13 +2415,13 @@ body {
 }
 .room-list-count {
   font-size: 14px;
-  color: #5B7B5E;
+  color: #666;
   font-weight: 600;
 }
 .room-list-empty {
   text-align: center;
   padding: 30px 10px;
-  color: #B8A99A;
+  color: #B0B0B0;
   font-size: 14px;
 }
 .room-list-footer {
@@ -2442,7 +2437,7 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #5B7B5E;
+  color: #666;
   cursor: pointer;
   user-select: none;
   padding: 4px 0;
@@ -2514,7 +2509,7 @@ body {
 }
 .modal-close:hover {
   background: rgba(196, 58, 49, 0.1);
-  color: #C43A31;
+  color: #8B2252;
 }
 
 /* ==================== 游戏介绍模态框 ==================== */
@@ -2530,7 +2525,7 @@ body {
   text-align: center;
   font-size: 22px;
   margin-bottom: 18px;
-  color: #C43A31;
+  color: #8B2252;
 }
 
 .intro-section {
@@ -2540,8 +2535,8 @@ body {
 .intro-section h3 {
   font-size: 16px;
   margin-bottom: 8px;
-  color: #3C2415;
-  border-bottom: 2px solid #C43A31;
+  color: #2C2C2C;
+  border-bottom: 2px solid #8B2252;
   padding-bottom: 4px;
 }
 
@@ -2594,13 +2589,13 @@ body {
 
 .intro-card-header strong {
   font-size: 14px;
-  color: #3C2415;
+  color: #2C2C2C;
 }
 
 .intro-card-score {
   display: inline-block;
   padding: 1px 8px;
-  background: #C43A31;
+  background: #8B2252;
   color: #fff;
   border-radius: 10px;
   font-size: 11px;

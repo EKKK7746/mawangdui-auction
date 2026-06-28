@@ -1,35 +1,36 @@
 // ============================================================
-// gameEngine.js — 马王堆·宝物拍卖 服务端权威游戏逻辑
+// gameEngine.js — 琳琅·华夏文物拍卖 服务端权威游戏逻辑
 // 规则：佣金竞标 → 拍卖师选卡 → 租骰 → 掷骰 → 佣金结算 → 发卡
 // ============================================================
 
 const crypto = require('crypto');
 
-// -------------------- 卡牌数据（10 张马王堆文物） --------------------
+// -------------------- 卡牌数据（20 张华夏文明代表性文物） --------------------
 
 const CARDS = [
-  // --- 原始 10 张 ---
-  { id: 'ssdc', name: '素纱襌衣',    score: 3, effect: null },
-  { id: 'mfl',  name: '皿方罍',      score: 3, effect: null },
-  { id: 'slj',  name: '双鸾双兽镜',  score: 2, effect: 'duel' },
-  { id: 'ssyz', name: '神兽玉樽',    score: 2, effect: null },
-  { id: 'yulb', name: '御龙帛画',    score: 2, effect: 'dragonPhoenix' },
-  { id: 'lfh',  name: '龙凤帛画',    score: 1, effect: 'dragonPhoenix' },
-  { id: 'jxsp', name: '君幸食漆盘',  score: 1, effect: 'rerollDice' },
-  { id: 'jxjeb',name: '君幸酒耳杯',  score: 2, effect: 'rerollDice' },
-  { id: 'dsy',  name: '对书俑',      score: 1, effect: 'upgradeDice' },
-  { id: 'sq',   name: '市券',        score: 1, effect: 'doubleCommission' },
-  // --- 扩充 10 张（每局从 20 张池中随机抽 10 张）---
-  { id: 'txbh', name: 'T形帛画',     score: 3, effect: 'extraScore' },       // 终局额外+2分
-  { id: 'td',   name: '铜鼎',         score: 3, effect: null },
-  { id: 'dmz',  name: '玳瑁樽',       score: 2, effect: 'soloReroll' },       // 独立重掷
-  { id: 'qlh',  name: '漆奁盒',       score: 2, effect: 'streakShield' },     // 连任惩罚减半
-  { id: 'ywqf', name: '云纹漆钫',     score: 2, effect: null },
-  { id: 'yb',   name: '玉璧',         score: 2, effect: null },
-  { id: 'cmwy', name: '彩绘木俑',     score: 1, effect: 'passiveIncome' },    // 每轮+$1
-  { id: 'se',   name: '瑟',           score: 1, effect: null },
-  { id: 'bsl',  name: '博山炉',       score: 1, effect: null },
-  { id: 'zs',   name: '缯书',         score: 1, effect: null },
+  // --- 3分·国之重器（4张）---
+  { id: 'sxqts', name: '青铜神树',    score: 3, effect: null },            // 三星堆·商
+  { id: 'qsbmy', name: '兵马俑',      score: 3, effect: null },            // 秦·始皇陵
+  { id: 'qmht',  name: '清明上河图',  score: 3, effect: 'extraScore' },    // 宋·终局+2分
+  { id: 'syfz',  name: '四羊方尊',    score: 3, effect: null },            // 商·青铜巅峰
+  // --- 2分·珍品雅器（8张）---
+  { id: 'slj',   name: '双鸾双兽镜',  score: 2, effect: 'duel' },          // 汉·镜中决斗
+  { id: 'jlyy',  name: '金缕玉衣',    score: 2, effect: null },            // 汉·中山靖王
+  { id: 'ltsx',  name: '兰亭序',      score: 2, effect: 'dragonPhoenix' }, // 晋·与快雪时晴帖联动
+  { id: 'zhybz', name: '曾侯乙编钟',  score: 2, effect: null },            // 战国·礼乐重器
+  { id: 'yqz',   name: '影青盏',      score: 2, effect: null },            // 宋·景德镇青白瓷
+  { id: 'yqh',   name: '元青花',      score: 2, effect: 'soloReroll' },    // 元·独立重掷
+  { id: 'dhmh',  name: '敦煌壁画',    score: 2, effect: 'streakShield' },  // 唐·连任惩罚减半
+  { id: 'rytqy', name: '汝窑天青釉',  score: 2, effect: 'rerollDice' },    // 宋·重掷骰子
+  // --- 1分·文明遗珍（8张）---
+  { id: 'kxqt',  name: '快雪时晴帖',  score: 1, effect: 'dragonPhoenix' }, // 晋·与兰亭序联动
+  { id: 'jgpx',  name: '甲骨卜辞',    score: 1, effect: 'rerollDice' },    // 商·与天青釉联动重掷
+  { id: 'dhft',  name: '敦煌飞天',    score: 1, effect: 'upgradeDice' },   // 唐·骰子升级
+  { id: 'sq',    name: '市券',        score: 1, effect: 'doubleCommission' }, // 汉·佣金翻倍
+  { id: 'sxtc',  name: '三彩驼',      score: 1, effect: 'passiveIncome' }, // 唐·每轮+$1
+  { id: 'cjgb',  name: '鸡缸杯',      score: 1, effect: null },            // 明·成化斗彩
+  { id: 'jofjg', name: '金瓯永固杯',  score: 1, effect: null },            // 清·乾隆御制
+  { id: 'dhcxb', name: '沉香雕笔',    score: 1, effect: null },            // 明·文房珍宝
 ];
 
 // -------------------- 常量 --------------------
@@ -76,13 +77,13 @@ function playerIndex(state, playerId) {
 
 /**
  * 判断玩家是否拥有重掷能力
- * - rerollDice：君幸食漆盘 + 君幸酒耳杯 组合
- * - soloReroll：玳瑁樽（独立生效）
+ * - rerollDice：汝窑天青釉 + 甲骨卜辞 组合
+ * - soloReroll：元青花（独立生效）
  */
 function hasRerollAbility(player) {
   if (!player) return false;
-  return (player.cards.some(c => c.id === 'jxsp') && player.cards.some(c => c.id === 'jxjeb'))
-      || player.cards.some(c => c.id === 'dmz');
+  return (player.cards.some(c => c.id === 'rytqy') && player.cards.some(c => c.id === 'jgpx'))
+      || player.cards.some(c => c.id === 'yqh');
 }
 
 function allBidsIn(state) {
@@ -338,7 +339,7 @@ function selectDice(roomId, playerId, diceType) {
 
   // 自动标记 done：pass / 拍卖师 / 无对书俑 → 自动确认
   const isPass = diceType === 'pass';
-  const hasUpgradeAvail = p.cards.some(c => c.id === 'dsy' && !c.used);
+  const hasUpgradeAvail = p.cards.some(c => c.id === 'dhft' && !c.used);
   if (isPass || !hasUpgradeAvail) {
     state.playersDone.add(playerId);
   }
@@ -353,7 +354,7 @@ function selectDice(roomId, playerId, diceType) {
   return { ok: true, waiting: true };
 }
 
-// -------------------- 4b. 对书俑升级 — upgradeDice --------------------
+// -------------------- 4b. 敦煌飞天升级 — upgradeDice --------------------
 
 function upgradeDice(roomId, playerId) {
   const state = games.get(roomId);
@@ -366,7 +367,7 @@ function upgradeDice(roomId, playerId) {
   const currentDice = state.diceSelections[playerId];
   if (!currentDice || currentDice === 'pass') return { error: '你还未选骰子或已放弃' };
 
-  const dsyCard = p.cards.find(c => c.id === 'dsy');
+  const dsyCard = p.cards.find(c => c.id === 'dhft');
   if (!dsyCard) return { error: '你没有对书俑' };
   if (dsyCard.used) return { error: '对书俑已使用过' };
 
@@ -643,8 +644,8 @@ function _settleCommission(state) {
 
   // 连任惩罚
   let penalty = Math.max(0, state.auctioneerStreak - 1);
-  // streakShield（漆奁盒）：连任惩罚减半（向下取整）
-  if (auctioneer.cards.some(c => c.id === 'qlh')) {
+  // streakShield（敦煌壁画）：连任惩罚减半（向下取整）
+  if (auctioneer.cards.some(c => c.id === 'dhmh')) {
     penalty = Math.floor(penalty / 2);
     console.log(`[引擎] 漆奁盒生效！连任惩罚减半 → $${penalty}`);
   }
@@ -802,12 +803,12 @@ function duelRentDice(socket, io, roomId, diceType, useUpgrade = false) {
   // 升级骰子处理（对书俑）
   let finalDiceType = diceType;
   if (useUpgrade && diceType !== 'pass') {
-    const hasScholar = player.cards.some(c => c.id === 'dsy' && !c.used);
+    const hasScholar = player.cards.some(c => c.id === 'dhft' && !c.used);
     if (hasScholar) {
       const UPGRADE_MAP = { 'd4': 'd6', 'd6': 'd12', 'd12': 'd20', 'd20': 'd20' };
       finalDiceType = UPGRADE_MAP[diceType] || diceType;
       // 标记已使用
-      const scholarCard = player.cards.find(c => c.id === 'dsy');
+      const scholarCard = player.cards.find(c => c.id === 'dhft');
       if (scholarCard) scholarCard.used = true;
       console.log(`[引擎] 🪞 决斗 ${player.nickname} 使用对书俑升级骰子：${diceType} → ${finalDiceType}`);
     }
@@ -1068,10 +1069,10 @@ function duelRentDiceById(roomId, playerId, diceType, useUpgrade) {
   // 升级处理（对书俑）
   let finalDiceType = diceType;
   if (useUpgrade && diceType !== 'pass') {
-    const hasScholar = player.cards.some(c => c.id === 'dsy' && !c.used);
+    const hasScholar = player.cards.some(c => c.id === 'dhft' && !c.used);
     if (hasScholar) {
       finalDiceType = DICE_UPGRADE[diceType] || diceType;
-      const scholarCard = player.cards.find(c => c.id === 'dsy');
+      const scholarCard = player.cards.find(c => c.id === 'dhft');
       if (scholarCard) scholarCard.used = true;
       console.log(`[引擎] 🪞 Bot决斗 ${player.nickname} 对书俑升级：${diceType} → ${finalDiceType}`);
     }
@@ -1155,8 +1156,8 @@ function endRound(roomId) {
   // 全员 +$1
   for (const p of state.players) {
     p.funds += 1;
-    // passiveIncome（彩绘木俑）：每轮额外+$1
-    if (p.cards.some(c => c.id === 'cmwy')) {
+    // passiveIncome（三彩驼）：每轮额外+$1
+    if (p.cards.some(c => c.id === 'sxtc')) {
       p.funds += 1;
       console.log(`[引擎] ${p.nickname} 彩绘木俑生效，额外+$1`);
     }
@@ -1216,18 +1217,18 @@ function endRound(roomId) {
 
 /**
  * 计算单张卡牌分（含 dragonPhoenix 联动）
- * dragonPhoenix：同时持有御龙帛画 + 龙凤帛画 → 所有1分卡按2分计
+ * dragonPhoenix：同时持有兰亭序 + 快雪时晴帖 → 所有1分卡按2分计
  */
 function calculateCardScore(cards) {
-  const hasDragonPhoenix = cards.some(c => c.id === 'yulb') && cards.some(c => c.id === 'lfh');
+  const hasDragonPhoenix = cards.some(c => c.id === 'ltsx') && cards.some(c => c.id === 'kxqt');
   let total = 0;
   for (const card of cards) {
     let s = card.score;
     if (hasDragonPhoenix && s === 1) s = 2;
     total += s;
   }
-  // extraScore（T形帛画）：终局额外+2分
-  if (cards.some(c => c.id === 'txbh')) {
+  // extraScore（清明上河图）：终局额外+2分
+  if (cards.some(c => c.id === 'qmht')) {
     total += 2;
   }
   return total;
@@ -1296,7 +1297,7 @@ function sanitizeRevealedCard(card, isAuctioneer) {
 function getPlayerView(fullState, playerId) {
   const isAuctioneer = fullState.auctioneerId === playerId;
   const me = fullState.players.find(p => p.id === playerId);
-  const hasUpgrade = me && me.cards.some(c => c.id === 'dsy' && !c.used);
+  const hasUpgrade = me && me.cards.some(c => c.id === 'dhft' && !c.used);
 
   // 基础公开信息
   const base = {
@@ -1318,10 +1319,10 @@ function getPlayerView(fullState, playerId) {
       isBot: !!p.isBot,
       // 始终发送完整卡牌信息
       cards: p.cards.map(c => ({ id: c.id, name: c.name, score: c.score, effect: c.effect, used: !!c.used })),
-      hasDragonPhoenix: p.cards.some(c => c.id === 'yulb') && p.cards.some(c => c.id === 'lfh'),
+      hasDragonPhoenix: p.cards.some(c => c.id === 'ltsx') && p.cards.some(c => c.id === 'kxqt'),
       hasReroll: hasRerollAbility(p),
       hasDoubleComm: p.cards.some(c => c.id === 'sq'),
-      hasUpgrade: p.cards.some(c => c.id === 'dsy' && !c.used),
+      hasUpgrade: p.cards.some(c => c.id === 'dhft' && !c.used),
       isMe: p.id === playerId,
     })),
   };

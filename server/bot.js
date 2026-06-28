@@ -230,7 +230,7 @@ function evaluateCardValue(card, playerCards) {
 
   // 联动组合检查
   if (card.effect === 'dragonPhoenix') {
-    const partner = card.id === 'yulb' ? 'lfh' : 'yulb';
+    const partner = card.id === 'ltsx' ? 'kxqt' : 'ltsx';
     if (playerCards.some(c => c.id === partner)) {
       value += 3; // 联动成功：所有1分卡+1，价值大幅提升
     } else {
@@ -239,7 +239,7 @@ function evaluateCardValue(card, playerCards) {
   }
 
   if (card.effect === 'rerollDice') {
-    const partner = card.id === 'jxsp' ? 'jxjeb' : 'jxsp';
+    const partner = card.id === 'rytqy' ? 'jgpx' : 'rytqy';
     if (playerCards.some(c => c.id === partner)) {
       value += 2; // 联动成功：重掷能力
     } else {
