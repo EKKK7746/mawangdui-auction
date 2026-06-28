@@ -1433,18 +1433,19 @@ function _renderPlayerList(view) {
 
     // 技能详情
     let skillDetail = [];
-    if (p.hasDragonPhoenix) skillDetail.push('🐉🐉 龙凤联动');
-    if (p.hasReroll) skillDetail.push('🎲🎲 重掷取高');
-    if (p.hasDoubleComm) skillDetail.push('💰 佣金翻倍');
-    if (p.hasUpgrade) skillDetail.push('⬆️ 骰子升级（可用）');
-    else if (p.cards && p.cards.some(c => c.id === 'dhft' && c.used)) skillDetail.push('⬆️ 骰子升级（已使用）');
+    if (p.hasDragonPhoenix) skillDetail.push('【联动·龙凤】');
+    if (p.hasReroll) skillDetail.push('【联动·重掷】');
+    if (p.hasDoubleComm) skillDetail.push('【被动·特权】');
+    if (p.hasUpgrade) skillDetail.push('【主动·飞升】可用');
+    else if (p.cards && p.cards.some(c => c.id === 'dhft' && c.used)) skillDetail.push('【主动·飞升】已用');
     if (p.cards && p.cards.some(c => c.id === 'slj')) {
       const sljCard = p.cards.find(c => c.id === 'slj');
-      skillDetail.push(sljCard?.used ? '🪞 镜中决斗（已使用）' : '🪞 镜中决斗');
+      skillDetail.push(sljCard?.used ? '【主动·决斗】已用' : '【主动·决斗】');
     }
-    if (p.cards && p.cards.some(c => c.id === 'qmht')) skillDetail.push('📜 终局加分');
-    if (p.cards && p.cards.some(c => c.id === 'sxtc')) skillDetail.push('🐪 每轮收入');
-    if (p.cards && p.cards.some(c => c.id === 'dhmh')) skillDetail.push('🛡️ 惩罚减半');
+    if (p.cards && p.cards.some(c => c.id === 'yqh')) skillDetail.push('【主动·重掷】');
+    if (p.cards && p.cards.some(c => c.id === 'qmht')) skillDetail.push('【被动·传世】');
+    if (p.cards && p.cards.some(c => c.id === 'sxtc')) skillDetail.push('【被动·通商】');
+    if (p.cards && p.cards.some(c => c.id === 'dhmh')) skillDetail.push('【被动·护佑】');
     const skillStr = skillDetail.length ? `<div class="pl-skills">${skillDetail.join(' | ')}</div>` : '';
 
     const isOpen = expandedMap[p.id] === true;

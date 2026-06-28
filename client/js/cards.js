@@ -29,15 +29,27 @@ const CARD_VISUALS = {
 };
 
 const EFFECT_LABELS = {
-  dragonPhoenix:    '🐉🐉 龙凤联动',
-  rerollDice:       '🎲 重掷取高',
-  soloReroll:       '🎲 独立重掷',
-  upgradeDice:      '⬆️ 骰子升级',
-  doubleCommission: '💰 佣金翻倍',
-  duel:             '🪞 镜中决斗',
-  extraScore:       '📜 终局加分',
-  passiveIncome:    '🐪 每轮收入',
-  streakShield:     '🛡️ 惩罚减半',
+  dragonPhoenix:    '【联动·龙凤】',
+  rerollDice:       '【联动·重掷】',
+  soloReroll:       '【主动·重掷】',
+  upgradeDice:      '【主动·飞升】',
+  duel:             '【主动·决斗】',
+  doubleCommission: '【被动·特权】',
+  extraScore:       '【被动·传世】',
+  passiveIncome:    '【被动·通商】',
+  streakShield:     '【被动·护佑】',
+};
+
+const EFFECT_CATEGORIES = {
+  dragonPhoenix:    'synergy',
+  rerollDice:       'synergy',
+  soloReroll:       'active',
+  upgradeDice:      'active',
+  duel:             'active',
+  doubleCommission: 'passive',
+  extraScore:       'passive',
+  passiveIncome:    'passive',
+  streakShield:     'passive',
 };
 
 const PHASE_LABELS = {

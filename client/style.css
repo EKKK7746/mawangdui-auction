@@ -2597,6 +2597,21 @@ body {
   color: #2C2C2C;
 }
 
+.skill-tag {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.skill-tag.cat-treasure { background: #E8E0D0; color: #8B7355; }
+.skill-tag.cat-synergy  { background: #E3F2FD; color: #1565C0; }
+.skill-tag.cat-active   { background: #FFF3E0; color: #E65100; }
+.skill-tag.cat-passive  { background: #E8F5E9; color: #2E7D32; }
+
 .intro-card-score {
   display: inline-block;
   padding: 1px 8px;
