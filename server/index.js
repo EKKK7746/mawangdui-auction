@@ -79,6 +79,15 @@ io.on('connection', (socket) => {
       return;
     }
     try {
+      // 检查游戏是否正在进行
+      const game = gameEngine.getGame(roomId);
+      if (game && game.phase !== 'finished' && game.phase !== 'waiting') {
+        // 游戏进行中 — 不能加入为玩家，但可以观战
+        const players = roomManager.getPlayers(roomId);
+        callback({ success: false, error: '游戏已开始，无法加入', gameInProgress: true, players, roomId });
+        return;
+      }
+
       const result = roomManager.joinRoom(socket, roomId, nickname);
       if (!result.success) {
         callback(result);
@@ -91,6 +100,34 @@ io.on('connection', (socket) => {
       console.error('[错误] 加入房间失败:', err.message);
       callback({ success: false, error: '加入房间失败' });
     }
+  });
+
+  // --- 观战：进入 ---
+  socket.on('spectator:enter', (roomId, nickname, callback) => {
+    if (typeof callback !== 'function') callback = () => {};
+
+    const game = gameEngine.getGame(roomId);
+    if (!game || game.phase === 'finished' || game.phase === 'waiting') {
+      callback({ success: false, error: '没有正在进行的游戏' });
+      return;
+    }
+
+    const result = roomManager.joinAsSpectator(socket, roomId, nickname);
+    if (!result.success) {
+      callback(result);
+      return;
+    }
+
+    // 发送当前游戏状态（观战者视角）
+    const view = gameEngine.getSpectatorView(game);
+    socket.emit('game_state_update', view);
+    callback({ success: true });
+  });
+
+  // --- 观战：离开 ---
+  socket.on('spectator:leave', (roomId) => {
+    roomManager.leaveSpectator(socket, roomId);
+    socket.emit('room:left', { roomId });
   });
 
   // --- 离开房间 ---

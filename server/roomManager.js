@@ -60,6 +60,7 @@ function createRoom(socket, nickname, isPublic) {
   rooms.set(roomId, {
     roomId,
     players: [player],
+    spectators: [],   // 观战者列表: [{id, nickname}]
     gameState: null,
     createdAt: Date.now(),
     hostSocketId: socket.id,
@@ -138,6 +139,14 @@ function leaveRoom(socket, roomId) {
 function handleDisconnect(socket) {
   const results = [];
   for (const [roomId, room] of rooms) {
+    // 先检查是否是观战者
+    const spectator = room.spectators.find(s => s.id === socket.id);
+    if (spectator) {
+      room.spectators = room.spectators.filter(s => s.id !== socket.id);
+      console.log(`[房间] 观战者 ${spectator.nickname} 断连，离开房间 ${roomId}`);
+      continue; // 观战者断连不触发 player_left 通知
+    }
+
     const player = room.players.find(p => p.id === socket.id);
     if (player) {
       room.players = room.players.filter(p => p.id !== socket.id);
@@ -156,6 +165,57 @@ function handleDisconnect(socket) {
     }
   }
   return results;
+}
+
+// -------------------- 观战功能 --------------------
+
+/**
+ * 以观战者身份加入房间（不参与游戏，只观看）
+ */
+function joinAsSpectator(socket, roomId, nickname) {
+  const room = rooms.get(roomId);
+  if (!room) return { success: false, error: '房间不存在' };
+
+  // 检查是否已在房间内（玩家或观战者）
+  if (room.players.some(p => p.id === socket.id)) {
+    return { success: false, error: '你已在房间中' };
+  }
+  if (room.spectators.some(s => s.id === socket.id)) {
+    return { success: false, error: '你已在观战中' };
+  }
+
+  const spectator = { id: socket.id, nickname };
+  room.spectators.push(spectator);
+  socket.join(roomId);
+
+  console.log(`[房间] ${nickname} 以观战者身份加入房间 ${roomId}`);
+  return { success: true, spectator, roomId };
+}
+
+/**
+ * 观战者离开房间
+ */
+function leaveSpectator(socket, roomId) {
+  const room = rooms.get(roomId);
+  if (!room) return null;
+
+  const spectator = room.spectators.find(s => s.id === socket.id);
+  if (!spectator) return null;
+
+  room.spectators = room.spectators.filter(s => s.id !== socket.id);
+  socket.leave(roomId);
+
+  console.log(`[房间] 观战者 ${spectator.nickname} 离开房间 ${roomId}`);
+  return { spectator, roomId };
+}
+
+/**
+ * 获取房间观战者列表
+ */
+function getSpectators(roomId) {
+  const room = rooms.get(roomId);
+  if (!room) return [];
+  return room.spectators.map(s => ({ id: s.id, nickname: s.nickname }));
 }
 
 // -------------------- 查询接口 --------------------
@@ -236,4 +296,7 @@ module.exports = {
   addBot,
   kickPlayer,
   getPublicRooms,
+  joinAsSpectator,
+  leaveSpectator,
+  getSpectators,
 };

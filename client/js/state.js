@@ -7,6 +7,8 @@ const GameState = {
   roomId: '',
   players: [],
   isHost: false,
+  isSpectator: false,
+  gameInProgress: false,
   currentView: 'login',
   gameData: null,
 };
@@ -26,5 +28,7 @@ GameState.reset = function () {
   this.roomId = '';
   this.players = [];
   this.isHost = false;
+  this.isSpectator = false;
+  this.gameInProgress = false;
   this.gameData = null;
 };

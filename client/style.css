@@ -2716,3 +2716,739 @@ body {
     font-size: 11px;
   }
 }
+
+/* ==================== 观战功能 ==================== */
+
+.spectator-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: linear-gradient(90deg, #2C2C2C, #3a3a3a);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  animation: spectateBarIn 0.4s ease;
+}
+
+.spectator-badge {
+  color: #D4AF37;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.spectator-bar .btn-sm {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+@keyframes spectateBarIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.spectator-action {
+  text-align: center;
+  padding: 40px 20px;
+  animation: spectateFadeIn 0.4s ease;
+}
+
+.spectator-action .spectator-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  animation: spectatePulse 2s ease-in-out infinite;
+}
+
+.spectator-action .spectator-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #D4AF37;
+  margin-bottom: 6px;
+}
+
+.spectator-action .spectator-sub {
+  font-size: 13px;
+  color: #B8A99A;
+}
+
+@keyframes spectatePulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes spectateFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ==================== 方案B：拍卖师公示页 ==================== */
+
+.auction-result-overlay {
+  text-align: center;
+  padding: 20px 10px;
+  animation: arFadeIn 0.4s ease;
+}
+
+.ar-crown {
+  font-size: 48px;
+  animation: arCrownBounce 0.6s ease;
+}
+
+.ar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #D4AF37;
+  margin: 6px 0 4px;
+  letter-spacing: 2px;
+}
+
+.ar-winner-name {
+  font-size: 26px;
+  font-weight: 800;
+  color: #C43A31;
+  margin: 4px 0;
+  animation: arNameGlow 1.5s ease-in-out infinite;
+}
+
+.ar-commission {
+  font-size: 16px;
+  color: #8B6914;
+  margin-bottom: 10px;
+}
+
+.ar-tied-notice {
+  background: rgba(196, 58, 49, 0.1);
+  border: 1px solid rgba(196, 58, 49, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #C43A31;
+  margin-bottom: 10px;
+}
+
+.ar-bids-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.ar-bid-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  font-size: 14px;
+  animation: arRowSlideIn 0.3s ease backwards;
+}
+
+.ar-bid-row.ar-winner {
+  background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+  border: 1px solid rgba(212,175,55,0.4);
+  font-weight: 600;
+}
+
+.ar-bid-row.ar-pass {
+  opacity: 0.5;
+}
+
+.ar-bid-name {
+  color: #E0D8D0;
+}
+
+.ar-bid-pct {
+  font-weight: 600;
+  color: #D4AF37;
+}
+
+.ar-bid-row.ar-pass .ar-bid-pct {
+  color: #888;
+}
+
+@keyframes arFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes arCrownBounce {
+  0% { transform: translateY(-30px) scale(0.5); opacity: 0; }
+  60% { transform: translateY(5px) scale(1.1); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes arNameGlow {
+  0%, 100% { text-shadow: 0 0 4px rgba(196,58,49,0.3); }
+  50% { text-shadow: 0 0 12px rgba(196,58,49,0.6); }
+}
+
+@keyframes arRowSlideIn {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ==================== 方案B：结算页三栏 ==================== */
+
+.settle-result-v2 {
+  animation: arFadeIn 0.4s ease;
+}
+
+.settle-tie-banner {
+  background: linear-gradient(90deg, rgba(196,58,49,0.15), rgba(196,58,49,0.05));
+  border: 1px solid rgba(196,58,49,0.3);
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #C43A31;
+  margin-bottom: 10px;
+  animation: arFadeIn 0.5s ease;
+}
+
+.settle-three-col {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.settle-col {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,169,110,0.15);
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 0;
+}
+
+.settle-col-title,
+.settle-winner-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #D4AF37;
+  text-align: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(201,169,110,0.15);
+}
+
+.settle-col-winner {
+  text-align: center;
+}
+
+.settle-winner-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #C43A31;
+  margin-bottom: 6px;
+}
+
+.settle-card-display {
+  margin: 6px auto;
+}
+
+.settle-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E0D8D0;
+  margin-top: 4px;
+}
+
+.settle-card-score {
+  font-size: 12px;
+  color: #D4AF37;
+}
+
+.settle-dice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.settle-dice-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  font-size: 12px;
+  animation: arRowSlideIn 0.3s ease backwards;
+}
+
+.settle-dice-row.is-winner {
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  font-weight: 600;
+}
+
+.settle-dice-row.is-auctioneer {
+  opacity: 0.6;
+}
+
+.sd-rank { width: 22px; text-align: center; flex-shrink: 0; }
+.sd-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #E0D8D0; }
+.sd-dice { width: 32px; text-align: center; color: #8B7B6B; flex-shrink: 0; }
+.sd-val { width: 28px; text-align: right; font-weight: 600; color: #D4AF37; flex-shrink: 0; }
+
+.settle-comm-detail {
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.sd-comm-row {
+  color: #B8A99A;
+  padding: 2px 0;
+}
+
+.sd-comm-penalty {
+  color: #C43A31;
+}
+
+.sd-comm-net {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(201,169,110,0.15);
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .settle-three-col {
+    flex-direction: column;
+  }
+}
+
+/* ==================== P0-1 + P2-2: 回合切换横幅 ==================== */
+
+.round-transition-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 16, 12, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: rtFadeIn 0.3s ease;
+}
+
+.round-transition-overlay.rt-fade-out {
+  animation: rtFadeOut 0.4s ease forwards;
+}
+
+.rt-content {
+  text-align: center;
+  animation: rtScaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rt-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #D4AF37;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.rt-subtitle {
+  font-size: 18px;
+  color: #B8A99A;
+  font-weight: 500;
+}
+
+.rt-endgame {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #C43A31;
+  animation: rtBlink 1s ease-in-out infinite;
+}
+
+@keyframes rtFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rtFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes rtScaleIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rtBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ==================== P2-1: 决斗开场动画 ==================== */
+
+.duel-intro-overlay {
+  position: relative;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.duel-intro-overlay .di-flash {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(196, 58, 49, 0.3), transparent 70%);
+  animation: diFlash 0.6s ease-out;
+}
+
+.duel-intro-overlay .di-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  animation: diContentIn 0.5s ease 0.3s backwards;
+}
+
+.duel-intro-overlay .di-vs-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.duel-intro-overlay .di-player {
+  text-align: center;
+  animation: diPlayerIn 0.5s ease backwards;
+}
+
+.duel-intro-overlay .di-left { animation-delay: 0.4s; }
+.duel-intro-overlay .di-right { animation-delay: 0.6s; }
+
+.duel-intro-overlay .di-avatar {
+  font-size: 48px;
+  margin-bottom: 6px;
+  animation: diAvatarPulse 1s ease-in-out infinite;
+}
+
+.duel-intro-overlay .di-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #E0D8D0;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.duel-intro-overlay .di-vs-text {
+  font-size: 36px;
+  font-weight: 900;
+  color: #C43A31;
+  text-shadow: 0 0 15px rgba(196, 58, 49, 0.6);
+  animation: diVsIn 0.4s ease 0.5s backwards;
+}
+
+.duel-intro-overlay .di-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #C43A31;
+  letter-spacing: 4px;
+  animation: diTitleIn 0.4s ease 0.8s backwards;
+}
+
+@keyframes diFlash {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes diContentIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes diPlayerIn {
+  from { opacity: 0; transform: translateX(0) scale(0.5); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes diAvatarPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes diVsIn {
+  from { opacity: 0; transform: scale(2) rotate(-15deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes diTitleIn {
+  from { opacity: 0; letter-spacing: 20px; }
+  to { opacity: 1; letter-spacing: 4px; }
+}
+
+/* ==================== P0-2: 暗标提交确认 ==================== */
+
+.bid-submitted-view {
+  text-align: center;
+  padding: 20px 16px;
+}
+
+.bid-submitted-view .bs-check {
+  font-size: 40px;
+  margin-bottom: 10px;
+  animation: bsCheckPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bid-submitted-view .bs-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5B7B5E;
+  margin-bottom: 4px;
+}
+
+.bid-submitted-view .bs-count {
+  font-size: 14px;
+  color: #B8A99A;
+  margin-bottom: 16px;
+}
+
+.bid-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 320px;
+  margin: 0 auto 12px;
+}
+
+.bid-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  animation: bsRowIn 0.3s ease backwards;
+}
+
+.bid-status-row.bs-done {
+  background: rgba(91, 123, 94, 0.08);
+  border: 1px solid rgba(91, 123, 94, 0.2);
+}
+
+.bid-status-row.bs-pending {
+  background: rgba(212, 160, 23, 0.06);
+  border: 1px solid rgba(212, 160, 23, 0.15);
+  animation: bsRowIn 0.3s ease backwards, bsPulse 2s ease-in-out infinite;
+}
+
+.bid-status-row.bs-me {
+  border-width: 2px;
+}
+
+.bid-status-row .bs-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.bid-status-row .bs-name {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bid-status-row .bs-state {
+  font-size: 12px;
+  color: #B8A99A;
+  flex-shrink: 0;
+}
+
+.bid-submitted-view .bs-hint {
+  font-size: 13px;
+  color: #B8A99A;
+  margin-top: 8px;
+}
+
+@keyframes bsCheckPop {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+@keyframes bsRowIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bsPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ==================== P1-1: 选卡旁观体验 ==================== */
+
+.select-card-waiting {
+  text-align: center;
+  padding: 36px 20px;
+}
+
+.select-card-waiting .scw-icon {
+  font-size: 44px;
+  margin-bottom: 12px;
+  animation: scwFloat 2s ease-in-out infinite;
+}
+
+.select-card-waiting .scw-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C2C2C;
+  margin-bottom: 8px;
+}
+
+.select-card-waiting .scw-deck-info {
+  font-size: 14px;
+  color: #D4AF37;
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding: 4px 12px;
+  background: rgba(212, 175, 55, 0.08);
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.select-card-waiting .scw-flavor {
+  font-size: 13px;
+  color: #B8A99A;
+  font-style: italic;
+  margin-bottom: 8px;
+  transition: opacity 0.5s ease;
+}
+
+.select-card-waiting .scw-dots {
+  font-size: 24px;
+  color: #D4AF37;
+  letter-spacing: 4px;
+}
+
+.select-card-waiting .scw-dots span {
+  animation: scwDot 1.4s ease-in-out infinite;
+}
+
+.select-card-waiting .scw-dots span:nth-child(2) { animation-delay: 0.2s; }
+.select-card-waiting .scw-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes scwFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes scwDot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ==================== P1-2: 卡牌揭晓动画 ==================== */
+
+#gameCardArea.reveal-legendary {
+  animation: revealLegendary 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#gameCardArea.reveal-rare {
+  animation: revealRare 0.6s ease;
+}
+
+#gameCardArea.reveal-common {
+  animation: revealCommon 0.4s ease;
+}
+
+@keyframes revealLegendary {
+  0% {
+    transform: scale(0.3) rotateY(180deg);
+    opacity: 0;
+    filter: brightness(2) drop-shadow(0 0 20px #D4AF37);
+  }
+  50% {
+    transform: scale(1.15) rotateY(0deg);
+    opacity: 1;
+    filter: brightness(1.5) drop-shadow(0 0 30px #D4AF37);
+  }
+  100% {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+  }
+}
+
+@keyframes revealRare {
+  0% {
+    transform: scale(0.5) rotateY(180deg);
+    opacity: 0;
+    filter: brightness(1.5) drop-shadow(0 0 15px #C9A96E);
+  }
+  100% {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+@keyframes revealCommon {
+  0% {
+    transform: scale(0.7) rotateY(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/* ==================== P1-3: 租骰等待扩充 ==================== */
+
+.player-status .ps-item.ps-done {
+  background: rgba(91, 123, 94, 0.08);
+  border: 1px solid rgba(91, 123, 94, 0.15);
+}
+
+.player-status .ps-item.ps-waiting {
+  background: rgba(212, 160, 23, 0.06);
+  border: 1px solid rgba(212, 160, 23, 0.12);
+  animation: bsPulse 2s ease-in-out infinite;
+}
+
+.player-status .ps-item .ps-dice-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.player-status .ps-item .ps-state {
+  font-size: 12px;
+  color: #B8A99A;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+
+.dice-waiting .bsm-dice {
+  display: inline-block;
+  padding: 2px 10px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
+  font-weight: 700;
+  color: #D4AF37;
+  margin-left: 6px;
+}
+
+.dice-waiting .bsm-pass {
+  display: inline-block;
+  padding: 2px 10px;
+  background: rgba(184, 169, 154, 0.1);
+  border-radius: 6px;
+  color: #B8A99A;
+  font-size: 13px;
+  margin-left: 6px;
+}

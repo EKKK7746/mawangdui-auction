@@ -121,12 +121,13 @@ function broadcast(roomId) {
   let ok = 0, fail = 0;
   for (const sid of room) {
     try {
-      const view = getPlayerView(state, sid);
+      const isPlayer = state.players.some(p => p.id === sid);
+      const view = isPlayer ? getPlayerView(state, sid) : getSpectatorView(state);
       _io.to(sid).emit('game_state_update', view);
       ok++;
     } catch (err) {
       fail++;
-      console.error(`[Broadcast] getPlayerView 失败 sid=${sid}:`, err.message);
+      console.error(`[Broadcast] view 生成失败 sid=${sid}:`, err.message);
     }
   }
   console.log(`[Broadcast] 完成 roomId=${roomId}, ok=${ok}, fail=${fail}, phase=${state.phase}`);
@@ -610,6 +611,16 @@ function resolveRoll(roomId) {
 
   const winner = state.players.find(p => p.id === winnerId);
   console.log(`[引擎] 掷骰胜者: ${winner.nickname}${result.tieDepth > 0 ? ` (经过${result.tieDepth}次平局重掷)` : ''}`);
+
+  // P0-3: 保存平局重掷信息
+  if (result.tieDepth > 0) {
+    state.tieInfo = {
+      depth: result.tieDepth,
+      hadTie: true,
+    };
+  } else {
+    state.tieInfo = null;
+  }
 
   state.phase = 'settle';
   return awardCard(roomId, winnerId);
@@ -1205,6 +1216,8 @@ function endRound(roomId) {
   state.commissionRate = 0;
   state._roundExpense = {};
   state.playersDone = new Set();
+  state.lastBidResults = null;   // 清除上轮暗标结果
+  state.tieInfo = null;          // 清除平局信息
   // 重新计算竞标顺序（从上一轮拍卖师开始）
   initBiddingOrder(state);
 
@@ -1349,10 +1362,14 @@ function getPlayerView(fullState, playerId) {
       base.bidsTotal = fullState.players.length;
       base.lastAuctioneerId = fullState.lastAuctioneerId;
       base.deckSize = fullState.deck.length;
+      // 方案B: 返回上一轮暗标结果（如果有）
+      if (fullState.lastBidResults) base.lastBidResults = fullState.lastBidResults;
       break;
     }
 
     case 'selectCard': {
+      // 方案B: 返回本轮暗标结果
+      if (fullState.lastBidResults) base.lastBidResults = fullState.lastBidResults;
       if (isAuctioneer) {
         // 拍卖师看到完整牌堆（含1分卡名称和效果）
         base.deck = fullState.deck.map((c, i) => ({
@@ -1412,6 +1429,8 @@ function getPlayerView(fullState, playerId) {
       base.revealedCard = fullState.revealedCard
         ? sanitizeRevealedCard(fullState.revealedCard, isAuctioneer)
         : null;
+      // P0-3: 平局重掷信息
+      if (fullState.tieInfo) base.tieInfo = fullState.tieInfo;
       break;
     }
 
@@ -1454,7 +1473,113 @@ function getPlayerView(fullState, playerId) {
   return base;
 }
 
-// -------------------- 查询 / 辅助 --------------------
+// -------------------- 10b. 观战者视角 --------------------
+
+function getSpectatorView(fullState) {
+  const base = {
+    roomId: fullState.roomId,
+    round: fullState.round,
+    maxRounds: fullState.maxRounds,
+    phase: fullState.phase,
+    auctioneerId: fullState.auctioneerId,
+    commissionRate: fullState.commissionRate,
+    auctioneerStreak: fullState.auctioneerStreak,
+    isSpectator: true,
+    players: fullState.players.map(p => ({
+      id: p.id,
+      nickname: p.nickname,
+      funds: p.funds,
+      cardCount: p.cards.length,
+      cardScore: calculateCardScore(p.cards),
+      isBot: !!p.isBot,
+      cards: p.cards.map(c => ({ id: c.id, name: c.name, score: c.score, effect: c.effect, used: !!c.used })),
+      hasDragonPhoenix: p.cards.some(c => c.id === 'ltsx') && p.cards.some(c => c.id === 'kxqt'),
+      hasReroll: hasRerollAbility(p),
+      hasDoubleComm: p.cards.some(c => c.id === 'sq'),
+      hasUpgrade: p.cards.some(c => c.id === 'dhft' && !c.used),
+      isMe: false,
+    })),
+  };
+
+  switch (fullState.phase) {
+    case 'auction': {
+      base.bids = fullState.players.map(p => {
+        const bid = fullState.bids.find(b => b.playerId === p.id);
+        return { playerId: p.id, submitted: !!bid, percentage: null };
+      });
+      base.bidsCount = fullState.bids.length;
+      base.bidsTotal = fullState.players.length;
+      base.lastAuctioneerId = fullState.lastAuctioneerId;
+      base.deckSize = fullState.deck.length;
+      // 方案B: 返回上一轮暗标结果（如果有）
+      if (fullState.lastBidResults) base.lastBidResults = fullState.lastBidResults;
+      break;
+    }
+    case 'selectCard': {
+      base.deckSize = fullState.deck.length;
+      base.deck = fullState.deck.map((_, i) => ({ index: i, hidden: true }));
+      // 方案B: 返回本轮暗标结果
+      if (fullState.lastBidResults) base.lastBidResults = fullState.lastBidResults;
+      break;
+    }
+    case 'rentDice': {
+      base.diceCosts = { ...DICE_COSTS };
+      base.playersDone = fullState.playersDone ? [...fullState.playersDone] : [];
+      base.diceSelections = {};
+      for (const p of fullState.players) {
+        if (p.id === fullState.auctioneerId) {
+          base.diceSelections[p.id] = 'auctioneer';
+        } else if (fullState.diceSelections.hasOwnProperty(p.id)) {
+          base.diceSelections[p.id] = 'selected';
+        } else {
+          base.diceSelections[p.id] = 'waiting';
+        }
+      }
+      base.revealedCard = fullState.revealedCard
+        ? sanitizeRevealedCard(fullState.revealedCard, false)
+        : null;
+      break;
+    }
+    case 'rollDice':
+    case 'settle': {
+      base.diceSelections = { ...fullState.diceSelections };
+      base.diceResults = { ...fullState.diceResults };
+      base.revealedCard = fullState.revealedCard
+        ? sanitizeRevealedCard(fullState.revealedCard, false)
+        : null;
+      // P0-3: 平局重掷信息
+      if (fullState.tieInfo) base.tieInfo = fullState.tieInfo;
+      break;
+    }
+    case 'duel': {
+      if (fullState.duel) {
+        base.duel = {
+          initiatorId: fullState.duel.initiatorId,
+          targetId: fullState.duel.targetId,
+          targetCardId: fullState.duel.targetCardId,
+          targetCardScore: fullState.duel.targetCardScore,
+          step: fullState.duel.step,
+          diceSelections: {},
+          diceResults: { ...fullState.duel.diceResults },
+          playersDone: fullState.duel.playersDone ? [...fullState.duel.playersDone] : [],
+          winnerId: fullState.duel.winnerId,
+          loserId: fullState.duel.loserId,
+          done: fullState.duel.done,
+        };
+      } else {
+        base.duel = null;
+      }
+      break;
+    }
+    case 'finished': {
+      base.revealedCard = null;
+      base.finalResults = fullState.finalResults || [];
+      break;
+    }
+  }
+
+  return base;
+}
 
 function getGame(roomId) {
   return games.get(roomId) || null;
@@ -1504,6 +1629,23 @@ function _settleAuctionAfterAllBids(state, roomId) {
     state.auctioneerId = null;
     state.commissionRate = 0;
     state.auctioneerStreak = 0;
+
+    // 方案B: 保存全员放弃的暗标结果
+    state.lastBidResults = {
+      bids: state.bids.map(b => ({
+        playerId: b.playerId,
+        nickname: state.players.find(p => p.id === b.playerId)?.nickname || '?',
+        percentage: b.percentage,
+        isWinner: false,
+      })),
+      winnerId: null,
+      winnerName: null,
+      commissionRate: 0,
+      tiedCount: 0,
+      tiedNames: null,
+      allPass: true,
+    };
+
     const idx = crypto.randomInt(0, state.deck.length);
     state.revealedCard = state.deck[idx];
     state.deck.splice(idx, 1);
@@ -1538,8 +1680,27 @@ function _settleAuctionAfterAllBids(state, roomId) {
   const winnerId = winner.playerId;
   const commissionRate = winner.percentage;
 
+  // 方案B: 保存本轮暗标结果（用于公示页展示）
+  const tiedNames = minBidders.length > 1
+    ? minBidders.map(b => state.players.find(p => p.id === b.playerId)?.nickname).join(', ')
+    : null;
+
+  state.lastBidResults = {
+    bids: state.bids.map(b => ({
+      playerId: b.playerId,
+      nickname: state.players.find(p => p.id === b.playerId)?.nickname || '?',
+      percentage: b.percentage,
+      isWinner: b.playerId === winnerId,
+    })),
+    winnerId,
+    winnerName: state.players.find(p => p.id === winnerId)?.nickname || '?',
+    commissionRate,
+    tiedCount: minBidders.length,
+    tiedNames,
+    allPass: false,
+  };
+
   if (minBidders.length > 1) {
-    const tiedNames = minBidders.map(b => state.players.find(p => p.id === b.playerId)?.nickname).join(', ');
     console.log(`[引擎] 暗标同价(${minPct}%)：${tiedNames} → 随机选中 ${state.players.find(p => p.id === winnerId)?.nickname}`);
   }
 
@@ -1798,6 +1959,7 @@ module.exports = {
   duelRentDiceById,
 
   getPlayerView,
+  getSpectatorView,
   getGame,
   _markPlayerDone,
   setIO,

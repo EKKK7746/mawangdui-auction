@@ -120,8 +120,24 @@ socket.on('player:ready', (data) => {
 function updateLobbyUI() {
   const btnStart = document.getElementById('btnStart');
   const btnAddBot = document.getElementById('btnAddBot');
+  const btnSpectate = document.getElementById('btnSpectate');
   const waitingText = document.getElementById('waitingText');
   const playerCount = GameState.getPlayerCount();
+
+  // 游戏进行中 — 只显示观战按钮
+  if (GameState.gameInProgress) {
+    if (btnStart) btnStart.style.display = 'none';
+    if (btnAddBot) btnAddBot.style.display = 'none';
+    if (btnSpectate) btnSpectate.style.display = 'block';
+    if (waitingText) {
+      waitingText.style.display = 'block';
+      waitingText.innerHTML = '<span class="dot-pulse" style="color:#C43A31;">⚡ 游戏进行中</span>';
+    }
+    return;
+  }
+
+  // 正常大厅状态
+  if (btnSpectate) btnSpectate.style.display = 'none';
 
   // 添加机器人按钮：仅房主可见，未满6人
   if (btnAddBot) {
@@ -247,8 +263,23 @@ document.addEventListener('DOMContentLoaded', () => {
       socket.emit('room:join', roomId, nickname, (response) => {
         if (typeof hideLoading === 'function') hideLoading();
         if (!response.success) {
-          if (loginError) loginError.textContent = response.error || '加入房间失败';
-          console.error('[Room] 加入房间失败:', response.error);
+          if (response.gameInProgress) {
+            // 游戏进行中 — 进入大厅但显示观战按钮
+            GameState.roomId = roomId;
+            GameState.nickname = nickname;
+            GameState.players = response.players || [];
+            GameState.isHost = false;
+            GameState.gameInProgress = true;
+
+            document.getElementById('roomIdDisplay').textContent = roomId;
+            renderPlayerList(response.players || []);
+            updateLobbyUI();
+            showView(Views.LOBBY);
+            if (typeof showToast === 'function') showToast('游戏进行中，可点击观战', 'info');
+          } else {
+            if (loginError) loginError.textContent = response.error || '加入房间失败';
+            console.error('[Room] 加入房间失败:', response.error);
+          }
         }
       });
     });
@@ -260,6 +291,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof openRoomListModal === 'function') {
         openRoomListModal();
       }
+    });
+  }
+
+  // 观战按钮
+  const btnSpectate = document.getElementById('btnSpectate');
+  if (btnSpectate) {
+    btnSpectate.addEventListener('click', () => {
+      if (!GameState.roomId || !GameState.nickname) return;
+      if (typeof showLoading === 'function') showLoading('进入观战…');
+      socket.emit('spectator:enter', GameState.roomId, GameState.nickname, (res) => {
+        if (typeof hideLoading === 'function') hideLoading();
+        if (!res.success) {
+          if (typeof showToast === 'function') showToast(res.error || '观战失败', 'error');
+        }
+      });
     });
   }
 });
