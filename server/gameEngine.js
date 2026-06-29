@@ -33,10 +33,17 @@ const CARDS = [
   { id: 'dhcxb', name: '沉香雕笔',    score: 1, effect: null },            // 明·文房珍宝
 ];
 
-// -------------------- 常量 --------------------
+// -------------------- 模式配置 --------------------
 
-const MAX_ROUNDS = 10;
-const STARTING_FUNDS = 12;
+const MODE_CONFIGS = {
+  speed:    { rounds: 5,  initialCash: 8,  label: '极速对决' },
+  classic:  { rounds: 10, initialCash: 12, label: '经典竞拍' },
+  fulldeck: { rounds: 20, initialCash: 20, label: '完整对局' },
+};
+
+// 默认常量（向后兼容，实际由 mode 决定）
+let MAX_ROUNDS = 10;
+let STARTING_FUNDS = 12;
 const DICE_TYPES = ['d4', 'd6', 'd12', 'd20'];
 const VALID_COMMISSIONS = [10, 20, 30, 40, 50];
 
@@ -170,12 +177,19 @@ function setTurnTimer(roomId, duration, phase, onTimeout) {
 
 // -------------------- 1. 初始化游戏 --------------------
 
-function initGame(roomId, players) {
-  const deck = shuffle(CARDS).slice(0, MAX_ROUNDS); // 从20张池随机抽10张
+function initGame(roomId, players, modeOpts) {
+  // ★ 根据模式决定参数
+  const modeId = (modeOpts && modeOpts.mode) || 'classic';
+  const cfg = MODE_CONFIGS[modeId] || MODE_CONFIGS.classic;
+  const maxRounds = (modeOpts && modeOpts.rounds) || cfg.rounds;
+  const startingFunds = (modeOpts && modeOpts.initialCash) || cfg.initialCash;
+
+  const deck = shuffle(CARDS).slice(0, maxRounds);
   const state = {
     roomId,
     round: 1,
-    maxRounds: MAX_ROUNDS,
+    maxRounds,
+    _startingFunds: startingFunds,  // ★ 保存用于重开
     phase: 'auction',
     deck,
     revealedCard: null,
@@ -196,14 +210,14 @@ function initGame(roomId, players) {
       isBot: !!p.isBot,
       isHost: !!p.isHost,
       strategy: p.strategy || 'greedy',
-      funds: STARTING_FUNDS,
+      funds: startingFunds,
       cards: [],
     })),
   };
 
   initBiddingOrder(state);
   games.set(roomId, state);
-  console.log(`[引擎] 房间 ${roomId} 游戏初始化，${players.length} 人，牌堆 ${deck.length} 张`);
+  console.log(`[引擎] 房间 ${roomId} 游戏初始化（${cfg.label}），${players.length} 人，牌堆 ${deck.length} 张，初始资金 $${startingFunds}`);
   broadcast(roomId);
   return state;
 }
@@ -2097,7 +2111,7 @@ function playerRejoin(socket, io, roomId) {
   // 找到该玩家并重置
   const player = state.players.find(p => p.id === socket.id);
   if (player) {
-    player.funds = STARTING_FUNDS;
+    player.funds = state._startingFunds || 12;
     player.cards = [];
     state.readyPlayers.add(socket.id);
   }
@@ -2133,9 +2147,9 @@ function restartGame(socket, io, roomId) {
 
   // 重置游戏状态但保留房间和玩家 — 回到等待阶段（房主可点击开始游戏）
   state.round = 0;
-  state.maxRounds = MAX_ROUNDS;
+  state.maxRounds = state.maxRounds;  // 保持原模式
   state.phase = 'waiting';
-  state.deck = shuffle([...CARDS]).slice(0, MAX_ROUNDS); // 从20张池随机抽10张
+  state.deck = shuffle([...CARDS]).slice(0, state.maxRounds);
   state.revealedCard = null;
   state.auctioneerId = null;
   state.lastAuctioneerId = null;
@@ -2154,7 +2168,7 @@ function restartGame(socket, io, roomId) {
 
   // 重置玩家资金和手牌
   for (const p of state.players) {
-    p.funds = STARTING_FUNDS;
+    p.funds = state._startingFunds || 12;
     p.cards = [];
   }
 
@@ -2165,6 +2179,8 @@ function restartGame(socket, io, roomId) {
 // -------------------- 导出 --------------------
 
 module.exports = {
+  getModeConfig: (id) => MODE_CONFIGS[id] || MODE_CONFIGS.classic,
+  MODE_CONFIGS,
   initGame,
   submitBid,
   selectCard,

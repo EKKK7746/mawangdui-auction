@@ -288,8 +288,14 @@ io.on('connection', (socket) => {
     try {
       // ★ 自动档解析：根据真人玩家数动态决定 Bot 难度
       resolveAutoStrategies(room);
-      gameEngine.initGame(roomId, room);
-      console.log(`[服务器] 房间 ${roomId} 游戏开始！`);
+
+      // ★ 获取房间模式配置，传给游戏引擎
+      const roomData = roomManager.getRoom(roomId);
+      const modeId = (roomData && roomData.mode) || 'classic';
+      const modeConfig = require('./gameEngine').getModeConfig(modeId);
+      gameEngine.initGame(roomId, room, modeConfig);
+
+      console.log(`[服务器] 房间 ${roomId} 游戏开始！（模式: ${modeId}）`);
       callback({ success: true });
     } catch (err) {
       console.error('[错误] 开始游戏失败:', err.message);

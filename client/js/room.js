@@ -99,7 +99,7 @@ socket.on('room:left', (data) => {
     showView(Views.LOBBY);
     return;
   }
-  backToLogin();
+  goToMode();
 });
 
 socket.on('room:kicked', (data) => {
@@ -107,7 +107,7 @@ socket.on('room:kicked', (data) => {
   GameState.roomId = null;
   GameState.players = [];
   GameState.isHost = false;
-  backToLogin();
+  goToMode();
   if (typeof showToast === 'function') showToast('你被房主移出了房间', 'info');
 });
 

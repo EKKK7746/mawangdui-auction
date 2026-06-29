@@ -33,15 +33,10 @@ function showView(viewName) {
 }
 
 /**
- * 返回登录页并重置状态
+ * 返回模式选择界面（离开房间时）
  */
-function backToLogin() {
+function goToMode() {
   GameState.reset();
-  showView(Views.START);
-
-  // 保留昵称：回填到开始界面
-  const startNickname = document.getElementById('startNickname');
-  if (startNickname && GameState.nickname) {
-    startNickname.value = GameState.nickname;
-  }
+  showView(Views.MODE);
+  renderModeCards();  // 刷新模式卡片
 }

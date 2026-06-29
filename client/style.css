@@ -2801,6 +2801,171 @@ body {
   }
 }
 
+/* ==================== 新手引导 ==================== */
+
+/* 开始页 "如何玩？" 按钮 */
+.start-guide {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.btn-guide {
+  background: linear-gradient(135deg, #8B2252, #C9A96E);
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-guide:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(139, 34, 82, 0.35);
+}
+
+/* 教程弹窗 */
+.tutorial-modal {
+  max-width: 480px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.tutorial-title {
+  font-size: 22px;
+  color: #8B2252;
+  margin-bottom: 6px;
+}
+
+.tutorial-sub {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.tutorial-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-tutorial-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #FFF8F0, #FFF0E0);
+  border: 2px solid #C9A96E;
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-tutorial-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(201, 169, 110, 0.3);
+}
+
+.tutorial-btn-icon {
+  font-size: 28px;
+}
+
+.tutorial-btn-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5C3D2E;
+}
+
+.tutorial-btn-desc {
+  font-size: 13px;
+  color: #999;
+}
+
+/* 游戏内教程面板 */
+.tutorial-panel {
+  background: linear-gradient(135deg, #FFF8E7, #FFFDE8);
+  border: 2px solid #C9A96E;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  animation: tutorialPulse 2s ease-in-out infinite;
+}
+
+@keyframes tutorialPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 110, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(201, 169, 110, 0); }
+}
+
+.tutorial-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #8B2252;
+  margin-bottom: 6px;
+}
+
+.tutorial-panel-icon {
+  font-size: 20px;
+}
+
+.tutorial-panel-text {
+  font-size: 13px;
+  color: #5C3D2E;
+  line-height: 1.6;
+}
+
+.tutorial-panel-progress {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.tutorial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #DDD;
+  transition: background 0.3s;
+}
+
+.tutorial-dot.active {
+  background: #C9A96E;
+}
+
+.tutorial-dot.done {
+  background: #8B2252;
+}
+
+/* 教程完成页 */
+.tutorial-complete {
+  text-align: center;
+  padding: 20px;
+}
+
+.tutorial-complete-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.tutorial-complete-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #8B2252;
+  margin-bottom: 8px;
+}
+
+.tutorial-complete-text {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
 /* ==================== 观战功能 ==================== */
 
 .spectator-bar {

@@ -252,7 +252,7 @@ function leaveSpectate() {
   // 清理观战栏
   const sbar = document.getElementById('spectatorBar');
   if (sbar) sbar.remove();
-  backToLogin();
+  goToMode();
 }
 
 // ==================== 状态栏 ====================
@@ -411,6 +411,18 @@ function _renderActionArea(view) {
 }
 
 function _renderActionContent(view, container) {
+  // ★ 教程模式：渲染引导面板 + 阶段内容
+  if (GameState._tutorial && GameState._tutorial.active) {
+    const tHtml = renderTutorialPanel(view.phase);
+    container.innerHTML = tHtml + '<div id="tut-phase-inner"></div>';
+    const inner = document.getElementById('tut-phase-inner');
+    _renderPhaseContent(view, inner);
+    return;
+  }
+  _renderPhaseContent(view, container);
+}
+
+function _renderPhaseContent(view, container) {
   switch (view.phase) {
     case 'auction':     _renderAuction(view, container); break;
     case 'selectCard':  _renderSelectCard(view, container); break;
@@ -1579,6 +1591,16 @@ const RANK_MEDALS = { 1: '👑', 2: '🥈', 3: '🥉' };
 
 function _renderFinished(view, container) {
   container.className = 'game-action-area';
+
+  // ★ 教程模式：显示完成页
+  if (GameState._tutorial && GameState._tutorial.active) {
+    const completeHtml = renderTutorialComplete();
+    if (completeHtml) {
+      container.innerHTML = completeHtml;
+      return;
+    }
+  }
+
   if (typeof playSound === 'function') playSound('gameOver');
   // 停止背景音乐
   if (typeof SoundManager !== 'undefined') SoundManager.stopAmbient();
