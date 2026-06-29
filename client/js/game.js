@@ -99,6 +99,10 @@ function renderGame(view) {
   // 观战者：显示观战标识和退出按钮
   if (view.isSpectator) {
     _renderSpectatorBar();
+  } else {
+    // 非观战者：移除残留的观战栏
+    const oldBar = document.getElementById('spectatorBar');
+    if (oldBar) oldBar.remove();
   }
 }
 
@@ -189,19 +193,23 @@ function _showDuelIntro(view, container) {
   container.innerHTML = `
     <div class="duel-intro-overlay">
       <div class="di-flash"></div>
+      <div class="di-scan-line"></div>
       <div class="di-content">
         <div class="di-vs-layout">
           <div class="di-player di-left">
             <div class="di-avatar">🪞</div>
             <div class="di-name">${initName}</div>
+            <div class="di-role">发起者</div>
           </div>
           <div class="di-vs-text">VS</div>
           <div class="di-player di-right">
             <div class="di-avatar">🪞</div>
             <div class="di-name">${targetName}</div>
+            <div class="di-role">被挑战</div>
           </div>
         </div>
-        <div class="di-title">镜中决斗！</div>
+        <div class="di-title">⚔️ 镜中决斗 ⚔️</div>
+        <div class="di-subtitle">双鸾双兽镜的神秘力量被激活！</div>
       </div>
     </div>
   `;
@@ -212,7 +220,7 @@ function _showDuelIntro(view, container) {
     _renderActionContent(view, container);
     container.classList.add('phase-enter');
     setTimeout(() => container.classList.remove('phase-enter'), 300);
-  }, 2000);
+  }, 2200);
 }
 
 function leaveSpectate() {
@@ -222,6 +230,9 @@ function leaveSpectate() {
   }
   GameState.isSpectator = false;
   GameState.gameInProgress = false;
+  // 清理观战栏
+  const sbar = document.getElementById('spectatorBar');
+  if (sbar) sbar.remove();
   backToLogin();
 }
 
@@ -1287,32 +1298,46 @@ function _renderDuelResolved(view, container, duel) {
   const winner = view.players.find(p => p.id === duel.winnerId);
   const loser = view.players.find(p => p.id === duel.loserId);
   const isWinner = duel.winnerId === socket.id;
+  const isLoser = duel.loserId === socket.id;
   const diceResults = duel.diceResults || {};
 
-  // Fix#2: 防御性 fallback，避免 winnerId/loserId 为 null 时显示 "undefined"
+  // Fix#2: 防御性 fallback
   const winnerName = winner?.nickname || '未知玩家';
   const loserName = loser?.nickname || '未知玩家';
+  const winnerVal = diceResults[duel.winnerId]?.value || '?';
+  const loserVal = diceResults[duel.loserId]?.value || '?';
+
+  // 音效
+  if (typeof playSound === 'function') {
+    if (isWinner) playSound('victory');
+    else if (isLoser) playSound('defeat');
+    else playSound('duel');
+  }
 
   container.innerHTML = `
     <div class="duel-panel duel-resolved">
       <div class="duel-header">
         <span class="duel-icon">🪞</span>
-        <h3>${isWinner ? '🎉 你赢了！' : `${winnerName} 赢得了决斗！`}</h3>
+        <h3 class="duel-result-title ${isWinner ? 'duel-win' : (isLoser ? 'duel-lose' : '')}">
+          ${isWinner ? '🎉 你赢得了决斗！' : isLoser ? '💔 你输掉了决斗...' : `${winnerName} 赢得了决斗！`}
+        </h3>
       </div>
       <div class="duel-result">
-        <div class="duel-vs">
-          <div>
-            <div>${winnerName}</div>
-            <div>🎲 ${diceResults[duel.winnerId]?.value || '?'}</div>
+        <div class="duel-vs duel-vs-result">
+          <div class="duel-vs-side ${isWinner ? 'duel-side-win' : ''}">
+            <div class="duel-vs-name">${winnerName}</div>
+            <div class="duel-vs-dice">🎲 ${winnerVal}</div>
+            <div class="duel-vs-tag">👑 胜</div>
           </div>
-          <div class="duel-vs-divider">VS</div>
-          <div>
-            <div>${loserName}</div>
-            <div>🎲 ${diceResults[duel.loserId]?.value || '?'}</div>
+          <div class="duel-vs-divider duel-vs-pulse">VS</div>
+          <div class="duel-vs-side ${isLoser ? 'duel-side-lose' : ''}">
+            <div class="duel-vs-name">${loserName}</div>
+            <div class="duel-vs-dice">🎲 ${loserVal}</div>
+            <div class="duel-vs-tag">負</div>
           </div>
         </div>
         <div class="duel-won-card">
-          <p>赢得卡牌：</p>
+          <p class="duel-won-label">赢得卡牌</p>
           <div class="card-emoji">${getCardFramedImageHtml(duel.targetCardId, 'frame-lg')}</div>
           <div class="card-name">${CARD_NAMES[duel.targetCardId] || duel.targetCardId}</div>
         </div>

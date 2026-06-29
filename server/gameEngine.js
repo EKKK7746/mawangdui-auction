@@ -600,7 +600,12 @@ function resolveRoll(roomId) {
       console.log('[引擎] 无人掷骰且无拍卖师，卡牌丢弃 → 自动推进回合');
       state.revealedCard = null;
       broadcast(roomId);
-      setTimeout(() => endRound(roomId), 2000);
+      // 安全网：2s 后自动推进（discarded 卡牌不需要长展示）
+      setTurnTimer(roomId, 2000, 'settle', () => {
+        const s = games.get(roomId);
+        if (!s || s.phase !== 'settle') return;
+        endRound(roomId);
+      });
       return { ok: true, discarded: true };
     }
   }
@@ -1149,7 +1154,17 @@ function awardCard(roomId, winnerId) {
   player.cards.push(cardData);
   console.log(`[引擎] ${player.nickname} 获得卡牌: ${card.name}${card.effect ? ' [' + card.effect + ']' : ''}`);
 
-  state.revealedCard = null;
+  // 不在此处清除 revealedCard — settle 阶段需要它来展示卡牌信息
+  // revealedCard 将在 endRound 中清除
+
+  // 安全网：settle 阶段 8s 超时自动推进（防止客户端 timer 失效卡死）
+  setTurnTimer(roomId, 8000, 'settle', () => {
+    const s = games.get(roomId);
+    if (!s || s.phase !== 'settle') return;
+    console.log(`[引擎] settle 阶段 8s 超时，自动推进回合`);
+    endRound(roomId);
+  });
+
   broadcast(roomId);
   return { ok: true, winnerId, card };
 }
@@ -1163,6 +1178,10 @@ function endRound(roomId) {
 
   // 清除倒计时
   clearTurnTimer(roomId);
+
+  // 清除本回合卡牌信息（settle 展示完毕）
+  state.revealedCard = null;
+  state.tieInfo = null;
 
   // 全员 +$1
   for (const p of state.players) {

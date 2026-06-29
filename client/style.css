@@ -852,18 +852,94 @@ body {
 .duel-result {
   margin-top: 20px;
 }
+.duel-result-title {
+  font-size: 22px !important;
+  margin: 0;
+}
+.duel-result-title.duel-win {
+  color: #D4AF37 !important;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  animation: duelWinPulse 0.6s ease;
+}
+.duel-result-title.duel-lose {
+  color: #888 !important;
+}
+.duel-vs.duel-vs-result {
+  gap: 20px;
+  margin: 16px 0;
+}
+.duel-vs-side {
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 10px;
+  min-width: 100px;
+}
+.duel-vs-side.duel-side-win {
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  animation: duelSideWin 0.5s ease;
+}
+.duel-vs-side.duel-side-lose {
+  background: rgba(136, 136, 136, 0.08);
+  border: 2px solid rgba(136, 136, 136, 0.2);
+}
+.duel-vs-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2C2C2C;
+  margin-bottom: 4px;
+}
+.duel-vs-dice {
+  font-size: 24px;
+  font-weight: 800;
+  color: #8B2252;
+  margin-bottom: 4px;
+}
+.duel-vs-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #B8A99A;
+}
+.duel-side-win .duel-vs-tag {
+  color: #D4AF37;
+}
+.duel-vs-pulse {
+  animation: duelVsPulse 1s ease-in-out infinite;
+}
 .duel-won-card { margin-top: 15px; }
+.duel-won-label {
+  font-size: 13px;
+  color: #B8A99A;
+  margin: 0 0 6px;
+}
 .duel-won-card .card-emoji { display: flex; justify-content: center; }
 .duel-won-card .card-name {
   font-size: 18px;
   font-weight: bold;
-  color: #FFD700;
+  color: #D4AF37;
+  text-shadow: 0 0 6px rgba(212, 175, 55, 0.3);
 }
 .duel-auto-close {
   margin-top: 15px;
   color: #aaa;
   font-size: 12px;
   animation: pulse 1.5s infinite;
+}
+
+@keyframes duelWinPulse {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes duelSideWin {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes duelVsPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 /* --- 等待动画 --- */
@@ -3090,18 +3166,30 @@ body {
 
 .duel-intro-overlay {
   position: relative;
-  min-height: 320px;
+  min-height: 360px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background: linear-gradient(135deg, rgba(40, 12, 8, 0.95), rgba(20, 6, 4, 0.98));
+  border-radius: 12px;
 }
 
 .duel-intro-overlay .di-flash {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(ellipse at center, rgba(196, 58, 49, 0.3), transparent 70%);
-  animation: diFlash 0.6s ease-out;
+  background: radial-gradient(ellipse at center, rgba(196, 58, 49, 0.5), transparent 70%);
+  animation: diFlash 0.8s ease-out;
+}
+
+.duel-intro-overlay .di-scan-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #C43A31, transparent);
+  box-shadow: 0 0 10px #C43A31, 0 0 20px rgba(196, 58, 49, 0.5);
+  animation: diScanLine 2s ease-in-out infinite;
+  z-index: 3;
 }
 
 .duel-intro-overlay .di-content {
@@ -3115,79 +3203,102 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 16px;
+  gap: 30px;
+  margin-bottom: 20px;
 }
 
 .duel-intro-overlay .di-player {
   text-align: center;
-  animation: diPlayerIn 0.5s ease backwards;
+  animation: diPlayerIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
 .duel-intro-overlay .di-left { animation-delay: 0.4s; }
 .duel-intro-overlay .di-right { animation-delay: 0.6s; }
 
 .duel-intro-overlay .di-avatar {
-  font-size: 48px;
-  margin-bottom: 6px;
+  font-size: 56px;
+  margin-bottom: 8px;
   animation: diAvatarPulse 1s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(196, 58, 49, 0.5));
 }
 
 .duel-intro-overlay .di-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #E0D8D0;
-  max-width: 100px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #F5E6D3;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 0 6px rgba(212, 175, 55, 0.3);
+}
+
+.duel-intro-overlay .di-role {
+  font-size: 11px;
+  color: #B8A99A;
+  margin-top: 2px;
 }
 
 .duel-intro-overlay .di-vs-text {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 900;
   color: #C43A31;
-  text-shadow: 0 0 15px rgba(196, 58, 49, 0.6);
-  animation: diVsIn 0.4s ease 0.5s backwards;
+  text-shadow: 0 0 20px rgba(196, 58, 49, 0.8), 0 0 40px rgba(196, 58, 49, 0.4);
+  animation: diVsIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s backwards;
 }
 
 .duel-intro-overlay .di-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #C43A31;
-  letter-spacing: 4px;
-  animation: diTitleIn 0.4s ease 0.8s backwards;
+  font-size: 26px;
+  font-weight: 800;
+  color: #D4AF37;
+  letter-spacing: 6px;
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  animation: diTitleIn 0.5s ease 0.8s backwards;
+}
+
+.duel-intro-overlay .di-subtitle {
+  font-size: 13px;
+  color: #B8A99A;
+  margin-top: 8px;
+  animation: diContentIn 0.5s ease 1s backwards;
 }
 
 @keyframes diFlash {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% { opacity: 0; transform: scale(0.3); }
+  40% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes diScanLine {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
 }
 
 @keyframes diContentIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes diPlayerIn {
-  from { opacity: 0; transform: translateX(0) scale(0.5); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes diAvatarPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(196, 58, 49, 0.5)); }
+  50% { transform: scale(1.2); filter: drop-shadow(0 0 16px rgba(196, 58, 49, 0.8)); }
 }
 
 @keyframes diVsIn {
-  from { opacity: 0; transform: scale(2) rotate(-15deg); }
+  from { opacity: 0; transform: scale(3) rotate(-25deg); }
   to { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 @keyframes diTitleIn {
-  from { opacity: 0; letter-spacing: 20px; }
-  to { opacity: 1; letter-spacing: 4px; }
+  from { opacity: 0; letter-spacing: 30px; transform: scale(0.8); }
+  to { opacity: 1; letter-spacing: 6px; transform: scale(1); }
 }
 
 /* ==================== P0-2: 暗标提交确认 ==================== */

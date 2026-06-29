@@ -52,7 +52,7 @@ class BotManager {
     const action = this._getAction(player.id, state);
     if (!action) return;
 
-    const delay = randDelay();
+    const delay = action.delayOverride || randDelay();
     const timerId = setTimeout(() => {
       // 重新获取最新状态（可能已被其他 bot 改变）
       const currentState = this._engine.getGame(roomId);
@@ -200,7 +200,7 @@ class BotManager {
         const isAuctioneer = state.auctioneerId === playerId;
         const isHost = p && p.isHost;
         if (isHost || isAuctioneer) {
-          return { label: '结束回合', fn: (rid) => this._engine.endRound(rid) };
+          return { label: '结束回合', fn: (rid) => this._engine.endRound(rid), delayOverride: 5500 };
         }
         return null;
       }
