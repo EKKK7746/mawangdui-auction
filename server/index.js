@@ -181,6 +181,8 @@ io.on('connection', (socket) => {
     if (game && game.phase !== 'finished' && game.phase !== 'waiting') {
       // 游戏进行中 → Bot 托管接管，不从房间移除
       gameEngine.disconnectPlayer(roomId, socket.id);
+      // ★ 显式调度托管 Bot
+      botManager.processBots(roomId);
       socket.emit('room:left', { roomId, managed: true });
       return;
     }
@@ -414,6 +416,8 @@ io.on('connection', (socket) => {
       if (game && game.phase !== 'finished' && game.phase !== 'waiting') {
         // 游戏进行中 → Bot 托管接管
         gameEngine.disconnectPlayer(r.roomId, socket.id);
+        // ★ 显式调度托管 Bot（不依赖 broadcast 回调链，消除竞态窗口）
+        botManager.processBots(r.roomId);
         // 将玩家加回 roomManager（保留房间成员身份，方便重连）
         if (!r.destroyed) {
           roomManager.reAddPlayer(r.roomId, r.player);

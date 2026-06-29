@@ -207,7 +207,8 @@ class BotManager {
         const isAuctioneer = state.auctioneerId === playerId;
         const isHost = p && p.isHost;
         if (isHost || isAuctioneer) {
-          return { label: '结束回合', fn: (rid) => this._engine.endRound(rid), delayOverride: 5500 };
+          // ★ 使用 randDelay() 保持一致决策节奏（800-2000ms），与 auction/rentDice 同频
+          return { label: '结束回合', fn: (rid) => this._engine.endRound(rid), delayOverride: randDelay() };
         }
         return null;
       }

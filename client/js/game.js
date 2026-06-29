@@ -521,7 +521,7 @@ function _renderAuction(view, container) {
       const isMe = p.id === socket.id;
       return `<div class="bid-status-row ${isSubmitted ? 'bs-done' : 'bs-pending'} ${isMe ? 'bs-me' : ''}">
         <span class="bs-icon">${isSubmitted ? '✅' : '⏳'}</span>
-        <span class="bs-name">${p.nickname}${isMe ? ' (你)' : ''}${p.isBot ? ' 🤖' : ''}</span>
+        <span class="bs-name">${p.nickname}${isMe ? ' (你)' : ''}${(p.isBot || p.managed) ? ' 🤖' : ''}</span>
         <span class="bs-state">${isSubmitted ? '已提交' : '思考中'}</span>
       </div>`;
     }).join('');
@@ -587,7 +587,7 @@ function _renderSelectCard(view, container) {
   if (!isMe) {
     // P1-1: 旁观者体验 — 牌堆剩余数量 + 文案轮替
     const auctioneer = view.players.find(p => p.id === view.auctioneerId);
-    const isBot = auctioneer && auctioneer.isBot;
+    const isBot = auctioneer && (auctioneer.isBot || auctioneer.managed);
     const deckSize = view.deckSize || 0;
 
     // 轮替文案
@@ -796,7 +796,7 @@ function _renderDiceWaiting(view, container) {
   const statusHtml = others.map(p => {
     const isDone = doneList.includes(p.id);
     return `<div class="ps-item ${isDone ? 'ps-done' : 'ps-waiting'}">
-      <span class="ps-nick">${p.nickname}${p.isBot ? ' 🤖' : ''}</span>
+      <span class="ps-nick">${p.nickname}${(p.isBot || p.managed) ? ' 🤖' : ''}</span>
       <span class="ps-dice-icon">${isDone ? '🎲' : '⏳'}</span>
       <span class="ps-state">${isDone ? '已选骰' : '选择中'}</span>
     </div>`;
@@ -2047,7 +2047,7 @@ function _renderWaiting(container, label, subLabel) {
 
 function _pendingAreBots(pending) {
   if (!pending || pending.length === 0) return false;
-  return pending.every(p => p.isBot);
+  return pending.every(p => p.isBot || p.managed);
 }
 
 // ==================== 返回大厅 ====================
