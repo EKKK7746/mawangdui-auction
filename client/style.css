@@ -1874,8 +1874,7 @@ body {
 .dice-canvas {
   display: block;
   border-radius: 12px;
-  /* 粒子发光的深色背景 */
-  background: radial-gradient(ellipse at center, #1A0A04 0%, #0D0402 70%, transparent 100%);
+  background: transparent;
 }
 
 .dice-label {

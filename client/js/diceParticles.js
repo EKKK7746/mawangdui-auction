@@ -21,11 +21,11 @@
   const NUMBER_H = 80;                 // 数字采样区高
   const SWIRL_R = 140;                 // 漩涡初始半径
 
-  // 调色板：马王堆金器色系
+  // 调色板：金色 + 赭红混合（马王堆漆器/金器色系）
   const PALETTE = [
-    '#D4AF37', '#FFD700', '#E8C84A', '#CD853F',
-    '#FFF8E7', '#B8860B', '#F5DEB3', '#DAA520',
-    '#C9A96E', '#FFE4B5', '#DEB887', '#F0E68C'
+    '#D4AF37', '#FFD700', '#C73E3A', '#E8C84A',
+    '#A0522D', '#DAA520', '#CD5C5C', '#B8860B',
+    '#B8442A', '#F5DEB3', '#D2691E', '#E8A840'
   ];
 
   // 阶段时长 (ms)
@@ -286,17 +286,8 @@
       if (typeof playSound === 'function') playSound('qianPop');
     }
 
-    // 清除画布
+    // 清除画布（透明背景）
     ctx.clearRect(0, 0, 360, 300);
-
-    // 背景微光
-    if (phase <= PHASE.GLOW) {
-      const bgAlpha = phase === PHASE.DISSOLVE
-        ? 0.15 * (1 - phaseProgress)
-        : 0.15;
-      ctx.fillStyle = `rgba(20, 8, 4, ${bgAlpha})`;
-      ctx.fillRect(0, 0, 360, 300);
-    }
 
     // 更新 + 渲染粒子
     for (const p of particles) {
@@ -374,8 +365,9 @@
       ctx.save();
       ctx.globalAlpha = glowAlpha;
       const grad = ctx.createRadialGradient(CX, CY, DICE_OUTLINE_R * 0.3, CX, CY, DICE_OUTLINE_R * 1.4);
-      grad.addColorStop(0, '#FFD700');
-      grad.addColorStop(0.5, 'rgba(212,175,55,0.3)');
+      grad.addColorStop(0, '#FFC040');
+      grad.addColorStop(0.3, '#C75B3A');
+      grad.addColorStop(0.6, 'rgba(180,68,42,0.35)');
       grad.addColorStop(1, 'rgba(212,175,55,0)');
       ctx.fillStyle = grad;
       ctx.fillRect(CX - DICE_OUTLINE_R * 2, CY - DICE_OUTLINE_R * 2, DICE_OUTLINE_R * 4, DICE_OUTLINE_R * 4);
@@ -388,8 +380,8 @@
       ctx.save();
       ctx.globalAlpha = 0.08;
       const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, glowR);
-      grad.addColorStop(0, '#FFD700');
-      grad.addColorStop(1, 'rgba(212,175,55,0)');
+      grad.addColorStop(0, '#E8C84A');
+      grad.addColorStop(1, 'rgba(199,62,58,0)');
       ctx.fillStyle = grad;
       ctx.fillRect(CX - glowR, CY - glowR, glowR * 2, glowR * 2);
       ctx.restore();
