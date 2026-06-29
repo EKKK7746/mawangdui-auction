@@ -272,10 +272,15 @@ function _renderCardDisplay(view) {
   const card = view.revealedCard;
 
   if (!card) {
-    area.style.display = 'none';
+    // ★ 用 visibility 保留空间，防止布局跳动
+    area.style.visibility = 'hidden';
+    area.style.opacity = '0';
+    area.style.pointerEvents = 'none';
     return;
   }
-  area.style.display = 'flex';
+  area.style.visibility = 'visible';
+  area.style.opacity = '1';
+  area.style.pointerEvents = 'auto';
 
   const isHidden = card.hidden;
   const name = isHidden ? '？？？' : card.name;
