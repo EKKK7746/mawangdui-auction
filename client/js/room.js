@@ -38,7 +38,7 @@ function doKickPlayer(targetId) {
 // -------------------- Socket 事件监听（房间相关） --------------------
 
 socket.on('room:created', (data) => {
-  console.log('[Room] 房间已创建:', data.roomId);
+  console.log('[Room] 房间已创建:', data.roomId, '模式:', data.mode);
   GameState.roomId = data.roomId;
   GameState.players = data.players;
   GameState.isHost = true;
@@ -48,6 +48,10 @@ socket.on('room:created', (data) => {
   updateLobbyUI();
   showView(Views.LOBBY);
   if (typeof playSound === 'function') playSound('confirm');
+
+  // 显示模式提示
+  const mode = getModeById(data.mode || 'classic');
+  if (typeof showToast === 'function') showToast(`${mode.icon} 已创建${mode.name}房间`, 'info');
 });
 
 socket.on('room:joined', (data) => {
@@ -214,6 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLoginButtons();
   }
 
+  // 更新房间界面玩家信息
+  updateRoomPlayerInfo();
+
   // 输入事件 — 更新按钮状态
   if (nicknameInput) {
     nicknameInput.addEventListener('input', updateLoginButtons);
@@ -249,7 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof showLoading === 'function') showLoading('创建房间中…');
 
       const isPublic = document.getElementById('isPublicToggle')?.checked || false;
-      socket.emit('room:create', nickname, isPublic, (response) => {
+      const maxPlayers = parseInt(document.getElementById('maxPlayersSelect')?.value || '6');
+      const mode = GameState.selectedMode?.id || 'classic';
+
+      socket.emit('room:create', nickname, isPublic, { mode, maxPlayers }, (response) => {
         if (typeof hideLoading === 'function') hideLoading();
         if (!response.success) {
           if (loginError) loginError.textContent = response.error || '创建房间失败';
@@ -320,3 +330,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// -------------------- 房间界面玩家信息 --------------------
+
+function updateRoomPlayerInfo() {
+  const nameSpan = document.getElementById('roomPlayerName');
+  const modeBadge = document.getElementById('roomModeBadge');
+  const nickInput = document.getElementById('nicknameInput');
+
+  if (nameSpan) nameSpan.textContent = GameState.nickname || '未设置';
+  if (nickInput && GameState.nickname) nickInput.value = GameState.nickname;
+
+  if (modeBadge && GameState.selectedMode) {
+    const m = GameState.selectedMode;
+    modeBadge.textContent = `${m.icon} ${m.name}`;
+  }
+}

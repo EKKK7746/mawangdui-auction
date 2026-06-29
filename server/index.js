@@ -57,14 +57,19 @@ io.on('connection', (socket) => {
   // ------ 房间操作 ------
 
   // --- 创建房间 ---
-  socket.on('room:create', (nickname, isPublic, callback) => {
+  socket.on('room:create', (nickname, isPublic, opts, callback) => {
+    // 兼容旧调用方式（opts 可能直接是 callback）
+    if (typeof opts === 'function') {
+      callback = opts;
+      opts = {};
+    }
     if (typeof callback !== 'function') {
       console.warn('[警告] room:create 缺少回调函数');
       return;
     }
     try {
-      const { roomId, players } = roomManager.createRoom(socket, nickname, isPublic);
-      socket.emit('room:created', { roomId, players });
+      const { roomId, players } = roomManager.createRoom(socket, nickname, isPublic, opts);
+      socket.emit('room:created', { roomId, players, mode: opts.mode || 'classic' });
       callback({ success: true, roomId });
     } catch (err) {
       console.error('[错误] 创建房间失败:', err.message);
@@ -240,6 +245,26 @@ io.on('connection', (socket) => {
     if (typeof callback !== 'function') return;
     const list = roomManager.getPublicRooms();
     callback({ success: true, rooms: list });
+  });
+
+  // --- 查询房间信息（加入前预览） ---
+  socket.on('room:info', (roomId, callback) => {
+    if (typeof callback !== 'function') return;
+    const room = roomManager.getRoom(roomId);
+    if (!room) {
+      callback({ success: false, error: '房间不存在' });
+      return;
+    }
+    const game = gameEngine.getGame(roomId);
+    callback({
+      success: true,
+      roomId: room.roomId,
+      mode: room.mode || 'classic',
+      playerCount: room.players.length,
+      hostNickname: room.players[0]?.nickname || '?',
+      maxPlayers: room.maxPlayers || 6,
+      isStarted: !!(game && game.phase !== 'waiting' && game.phase !== 'finished')
+    });
   });
 
   // ------ 游戏操作 ------

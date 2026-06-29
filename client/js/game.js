@@ -139,8 +139,11 @@ function _renderSpectatorBar() {
 
 // ==================== P0-1 + P2-2: 回合切换横幅 ====================
 
+// 中文数字映射
+const _CN_NUMS = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾',
+  '拾壹', '拾贰', '拾叁', '拾肆', '拾伍', '拾陆', '拾柒', '拾捌', '拾玖', '贰拾'];
+
 function _showRoundTransition(view) {
-  // 清除上一次的横幅
   if (_roundTransitionTimer) {
     clearTimeout(_roundTransitionTimer);
     _roundTransitionTimer = null;
@@ -157,31 +160,33 @@ function _showRoundTransition(view) {
   overlay.id = 'roundTransitionOverlay';
   overlay.className = 'round-transition-overlay';
 
-  const title = isFirstRound ? '🎮 游戏开始' : `第 ${round} 轮`;
+  const roundCn = _CN_NUMS[round] || String(round);
+  const title = isFirstRound ? '游戏开始' : `第 ${roundCn} 轮`;
   const subtitle = `共 ${maxRounds} 轮`;
   const endgameTag = isEndgame && !isFirstRound ? '<div class="rt-endgame">⚡ 终局倒计时</div>' : '';
 
   overlay.innerHTML = `
-    <div class="rt-content">
-      <div class="rt-title">${title}</div>
-      <div class="rt-subtitle">${subtitle}</div>
-      ${endgameTag}
+    <div class="rt-scroll">
+      <div class="rt-content">
+        <div class="rt-title">${title}</div>
+        <div class="rt-subtitle">${subtitle}</div>
+        ${endgameTag}
+      </div>
     </div>
   `;
 
   document.body.appendChild(overlay);
 
-  // 音效
   if (typeof playSound === 'function') playSound('confirm');
 
-  // 1.5s 后淡出移除
+  // 卷轴展开 ~400ms → 停留 1200ms → 卷轴收起 300ms
   _roundTransitionTimer = setTimeout(() => {
     overlay.classList.add('rt-fade-out');
     _roundTransitionTimer = setTimeout(() => {
       overlay.remove();
       _roundTransitionTimer = null;
-    }, 400);
-  }, 1500);
+    }, 300);
+  }, 1600);
 }
 
 // ==================== P2-1: 决斗开场动画 ====================

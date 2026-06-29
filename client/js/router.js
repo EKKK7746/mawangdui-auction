@@ -3,6 +3,8 @@
 // ============================================================
 
 const Views = {
+  START: 'start',
+  MODE: 'mode',
   LOGIN: 'login',
   LOBBY: 'lobby',
   ROOM_WAIT: 'room-wait',
@@ -34,25 +36,12 @@ function showView(viewName) {
  * 返回登录页并重置状态
  */
 function backToLogin() {
-  GameState.reset();     // 不再清空 nickname
-  showView(Views.LOGIN);
+  GameState.reset();
+  showView(Views.START);
 
-  // 保留昵称：从 GameState 回填到输入框
-  const nicknameInput = document.getElementById('nicknameInput');
-  const roomInput = document.getElementById('roomInput');
-  const loginError = document.getElementById('loginError');
-  if (nicknameInput && GameState.nickname) {
-    nicknameInput.value = GameState.nickname;
-  } else if (nicknameInput) {
-    // 如果 GameState.nickname 也空了，尝试从 localStorage 恢复
-    const saved = JSON.parse(localStorage.getItem('mwPlayer') || '{}');
-    if (saved.nickname) {
-      nicknameInput.value = saved.nickname;
-      GameState.nickname = saved.nickname;
-    }
+  // 保留昵称：回填到开始界面
+  const startNickname = document.getElementById('startNickname');
+  if (startNickname && GameState.nickname) {
+    startNickname.value = GameState.nickname;
   }
-  if (roomInput) roomInput.value = '';
-  if (loginError) loginError.textContent = '';
-
-  updateLoginButtons();
 }

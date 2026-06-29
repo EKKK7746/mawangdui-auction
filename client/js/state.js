@@ -9,8 +9,9 @@ const GameState = {
   isHost: false,
   isSpectator: false,
   gameInProgress: false,
-  currentView: 'login',
+  currentView: 'start',
   gameData: null,
+  selectedMode: null,
 };
 
 // -------------------- 辅助方法 --------------------

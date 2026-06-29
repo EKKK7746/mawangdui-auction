@@ -53,22 +53,26 @@ function _isOnlyBots(room) {
 
 // -------------------- 房间操作 --------------------
 
-function createRoom(socket, nickname, isPublic) {
+function createRoom(socket, nickname, isPublic, opts = {}) {
   const roomId = generateRoomId();
   const player = { id: socket.id, nickname, isHost: true };
+  const mode = opts.mode || 'classic';
+  const maxPlayers = opts.maxPlayers || 6;
 
   rooms.set(roomId, {
     roomId,
     players: [player],
-    spectators: [],   // 观战者列表: [{id, nickname}]
+    spectators: [],
     gameState: null,
     createdAt: Date.now(),
     hostSocketId: socket.id,
-    isPublic: !!isPublic
+    isPublic: !!isPublic,
+    mode,
+    maxPlayers
   });
 
   socket.join(roomId);
-  console.log(`[房间] ${nickname} 创建房间 ${roomId} (${isPublic ? '公开' : '私密'})`);
+  console.log(`[房间] ${nickname} 创建房间 ${roomId} (${isPublic ? '公开' : '私密'}, ${mode}, 最多${maxPlayers}人)`);
   return { roomId, players: getPlayers(roomId) };
 }
 
@@ -76,7 +80,8 @@ function joinRoom(socket, roomId, nickname) {
   const room = rooms.get(roomId);
 
   if (!room)  return { success: false, error: '房间不存在' };
-  if (room.players.length >= 6) return { success: false, error: '房间已满（最多6人）' };
+  const maxP = room.maxPlayers || 6;
+  if (room.players.length >= maxP) return { success: false, error: `房间已满（最多${maxP}人）` };
   if (room.gameState !== null) return { success: false, error: '游戏已开始，无法加入' };
   if (room.players.some(p => p.nickname === nickname)) return { success: false, error: '昵称已被使用' };
 
@@ -231,7 +236,8 @@ function getPlayers(roomId) {
 function addBot(roomId, botPlayer) {
   const room = rooms.get(roomId);
   if (!room) return { success: false, error: '房间不存在' };
-  if (room.players.length >= 6) return { success: false, error: '房间已满（最多6人）' };
+  const maxP = room.maxPlayers || 6;
+  if (room.players.length >= maxP) return { success: false, error: `房间已满（最多${maxP}人）` };
   if (room.gameState !== null) return { success: false, error: '游戏已开始，无法加入' };
 
   const player = {
@@ -276,12 +282,21 @@ function getPublicRooms() {
       result.push({
         roomId: room.roomId,
         playerCount: room.players.length,
+        maxPlayers: room.maxPlayers || 6,
         hostNickname: room.players[0]?.nickname || '?',
+        mode: room.mode || 'classic',
         isPublic: true,
       });
     }
   }
   return result;
+}
+
+/**
+ * 获取房间对象（用于 room:info 查询）
+ */
+function getRoom(roomId) {
+  return rooms.get(roomId) || null;
 }
 
 // -------------------- 导出 --------------------
@@ -325,6 +340,7 @@ module.exports = {
   leaveRoom,
   handleDisconnect,
   getPlayers,
+  getRoom,
   roomExists,
   addBot,
   kickPlayer,

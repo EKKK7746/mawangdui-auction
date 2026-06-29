@@ -10,13 +10,86 @@
 
   <div id="app">
 
-    <!-- ========== 视图 A：登录页 ========== -->
-    <section id="view-login" class="view active">
+    <!-- ========== 视图 A：开始界面 ========== -->
+    <section id="view-start" class="view active">
+      <div class="start-container">
+        <div class="start-hero">
+          <div class="start-logo">🏺</div>
+          <h1 class="start-title">琳 琅</h1>
+          <p class="start-subtitle">华夏千年 · 珍宝博弈</p>
+        </div>
+
+        <div class="start-flow">
+          <div class="start-flow-title">游戏流程</div>
+          <div class="start-flow-cards">
+            <div class="flow-card">
+              <div class="flow-num">①</div>
+              <div class="flow-icon">⚖️</div>
+              <div class="flow-label">竞标拍卖师</div>
+            </div>
+            <div class="flow-card">
+              <div class="flow-num">②</div>
+              <div class="flow-icon">🏺</div>
+              <div class="flow-label">挑选文物</div>
+            </div>
+            <div class="flow-card">
+              <div class="flow-num">③</div>
+              <div class="flow-icon">🎲</div>
+              <div class="flow-label">租骰掷骰</div>
+            </div>
+            <div class="flow-card">
+              <div class="flow-num">④</div>
+              <div class="flow-icon">🏆</div>
+              <div class="flow-label">结算得分</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="start-form">
+          <input type="text" id="startNickname" class="input-primary start-input"
+            placeholder="输入你的名字 (2-8字)" maxlength="8" autocomplete="off">
+          <button id="btnStartGame" class="btn btn-primary btn-start" disabled>
+            开始游戏 →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 视图 B：选择游戏模式 ========== -->
+    <section id="view-mode" class="view">
+      <div class="mode-container">
+        <div class="mode-header">
+          <button class="mode-back" onclick="goToStart()">← 返回</button>
+          <h2 class="mode-title">选择游戏模式</h2>
+          <button class="mode-join-btn" onclick="showJoinRoomFromMode()">加入房间</button>
+        </div>
+
+        <div class="mode-cards" id="modeCards">
+          <!-- 由 mode.js 动态生成 -->
+        </div>
+
+        <!-- 从模式选择界面加入房间的弹窗 -->
+        <div class="mode-join-panel" id="modeJoinPanel" style="display:none;">
+          <div class="mode-join-header">
+            <span>🔍 加入房间</span>
+            <button class="mode-join-close" onclick="hideJoinRoomFromMode()">✕</button>
+          </div>
+          <div class="mode-join-body">
+            <input type="text" id="modeRoomInput" class="input-primary"
+              placeholder="输入6位房间号" maxlength="6" inputmode="numeric" autocomplete="off">
+            <div id="modeRoomPreview" class="mode-room-preview" style="display:none;"></div>
+            <button id="btnModeJoin" class="btn btn-primary" disabled>加入</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 视图 C：房间页 ========== -->
+    <section id="view-login" class="view">
       <div class="login-container">
-        <div class="logo-area">
-          <div class="logo-icon">🏺</div>
-          <h1 class="game-title">琳琅</h1>
-          <p class="game-subtitle">华夏千年·珍宝博弈</p>
+        <div class="room-header-bar">
+          <button class="room-back-btn" onclick="goToMode()">← 返回</button>
+          <div class="room-mode-badge" id="roomModeBadge">🏺 经典竞拍</div>
         </div>
 
         <div class="login-form">
@@ -29,14 +102,27 @@
             autocomplete="off"
           >
 
-          <label class="visibility-toggle">
-            <input type="checkbox" id="isPublicToggle" checked />
-            <span class="visibility-label">🌐 公开房间（允许其他玩家浏览加入）</span>
-          </label>
-
-          <button id="btnCreate" class="btn btn-primary" disabled>
-            创建房间
-          </button>
+          <div class="room-create-section">
+            <div class="room-create-row">
+              <label class="visibility-toggle">
+                <input type="checkbox" id="isPublicToggle" checked />
+                <span class="visibility-label">🌐 公开房间</span>
+              </label>
+              <div class="room-max-select">
+                <label class="max-label">最多</label>
+                <select id="maxPlayersSelect" class="max-players-select">
+                  <option value="2">2人</option>
+                  <option value="3">3人</option>
+                  <option value="4">4人</option>
+                  <option value="5">5人</option>
+                  <option value="6" selected>6人</option>
+                </select>
+              </div>
+            </div>
+            <button id="btnCreate" class="btn btn-primary" disabled>
+              创建房间
+            </button>
+          </div>
 
           <div class="divider">
             <span class="divider-line"></span>
@@ -63,12 +149,11 @@
             🔍 浏览公开房间
           </button>
 
-          <!-- 游戏介绍按钮 -->
-          <button id="btnIntro" class="btn btn-outline" style="width:100%;margin-top:8px;">
-            📖 游戏介绍
-          </button>
-
           <p id="loginError" class="error-msg"></p>
+        </div>
+
+        <div class="room-player-info" id="roomPlayerInfo">
+          👤 <span id="roomPlayerName"></span>
         </div>
       </div>
     </section>
@@ -530,6 +615,7 @@
   <script src="js/state.js"></script>
   <script src="js/socket.js"></script>
   <script src="js/router.js"></script>
+  <script src="js/mode.js"></script>
   <script src="js/room.js"></script>
   <script src="js/lobby.js"></script>
   <script src="js/cards.js"></script>
