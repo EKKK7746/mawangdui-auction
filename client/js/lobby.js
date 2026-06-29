@@ -29,14 +29,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnStart) {
     btnStart.addEventListener('click', () => {
       if (!GameState.isHost || GameState.getPlayerCount() < 2) return;
+      if (btnStart.disabled) return;            // 防重复点击
+
+      btnStart.disabled = true;
+      btnStart.textContent = '开始中…';
       console.log('[Lobby] 发送 game:start');
       if (typeof playSound === 'function') playSound('gameStart');
       socket.emit('game:start', GameState.roomId, (res) => {
-        if (!res.success) {
-          showToast(res.error || '开始游戏失败', 'error');
+        if (!res || !res.success) {
+          showToast(res?.error || '开始游戏失败', 'error');
+          btnStart.disabled = false;            // 失败后恢复按钮
+          btnStart.textContent = '开始游戏';
         }
-        // 成功后会收到 game:state_update，game.js 自动切换到游戏视图
+        // 成功后会收到 game_state_update，game.js 自动切换到游戏视图
       });
+
+      // 超时保险：5 秒后无响应则恢复按钮
+      setTimeout(() => {
+        if (btnStart.disabled) {
+          btnStart.disabled = false;
+          btnStart.textContent = '开始游戏';
+        }
+      }, 5000);
     });
   }
 

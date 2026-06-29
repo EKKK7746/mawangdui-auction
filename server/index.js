@@ -281,7 +281,8 @@ io.on('connection', (socket) => {
 
     const existing = gameEngine.getGame(roomId);
     if (existing && existing.phase !== 'finished' && existing.phase !== 'waiting') {
-      callback({ success: false, error: '游戏已在进行中' });
+      // 幂等：游戏已在进行中，不报错（防止客户端重复点击）
+      callback({ success: true });
       return;
     }
 
