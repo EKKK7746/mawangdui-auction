@@ -1441,15 +1441,29 @@ function getPlayerView(fullState, playerId) {
       break;
     }
 
-    case 'rollDice':
-    case 'settle': {
+    case 'rollDice': {
       base.diceSelections = { ...fullState.diceSelections };
       base.diceResults = { ...fullState.diceResults };
+      // 掷骰阶段：1分卡仍对非拍卖师隐藏（竞标信息不对称）
       base.revealedCard = fullState.revealedCard
         ? sanitizeRevealedCard(fullState.revealedCard, isAuctioneer)
         : null;
       // P0-3: 平局重掷信息
       if (fullState.tieInfo) base.tieInfo = fullState.tieInfo;
+      break;
+    }
+
+    case 'settle': {
+      base.diceSelections = { ...fullState.diceSelections };
+      base.diceResults = { ...fullState.diceResults };
+      // 结算阶段：本轮已结束，卡牌信息对所有人完全揭示
+      base.revealedCard = fullState.revealedCard
+        ? { ...fullState.revealedCard }
+        : null;
+      // P0-3: 平局重掷信息
+      if (fullState.tieInfo) base.tieInfo = fullState.tieInfo;
+      // 暗标竞标结果（结算展示用）
+      if (fullState.lastBidResults) base.lastBidResults = fullState.lastBidResults;
       break;
     }
 
@@ -1559,8 +1573,7 @@ function getSpectatorView(fullState) {
         : null;
       break;
     }
-    case 'rollDice':
-    case 'settle': {
+    case 'rollDice': {
       base.diceSelections = { ...fullState.diceSelections };
       base.diceResults = { ...fullState.diceResults };
       base.revealedCard = fullState.revealedCard
@@ -1568,6 +1581,19 @@ function getSpectatorView(fullState) {
         : null;
       // P0-3: 平局重掷信息
       if (fullState.tieInfo) base.tieInfo = fullState.tieInfo;
+      break;
+    }
+    case 'settle': {
+      base.diceSelections = { ...fullState.diceSelections };
+      base.diceResults = { ...fullState.diceResults };
+      // 结算阶段：卡牌对所有人（包括观战者）完全揭示
+      base.revealedCard = fullState.revealedCard
+        ? { ...fullState.revealedCard }
+        : null;
+      // P0-3: 平局重掷信息
+      if (fullState.tieInfo) base.tieInfo = fullState.tieInfo;
+      // 暗标竞标结果（结算展示用）
+      if (fullState.lastBidResults) base.lastBidResults = fullState.lastBidResults;
       break;
     }
     case 'duel': {

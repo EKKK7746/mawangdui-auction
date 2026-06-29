@@ -143,6 +143,36 @@ body {
   letter-spacing: 2px;
 }
 
+/* ---- Bot 难度选择器 ---- */
+.select-difficulty {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  background: #FAFAFA;
+  color: #2C2C2C;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin-top: 6px;
+}
+
+.select-difficulty:hover {
+  border-color: #C9A96E;
+}
+
+.select-difficulty:focus {
+  border-color: #C9A96E;
+  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2);
+}
+
 .divider {
   display: flex;
   align-items: center;

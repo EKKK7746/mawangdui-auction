@@ -223,7 +223,7 @@ function getSpectators(roomId) {
 function getPlayers(roomId) {
   const room = rooms.get(roomId);
   if (!room) return [];
-  return room.players.map(p => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, isBot: !!p.isBot }));
+  return room.players.map(p => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, isBot: !!p.isBot, strategy: p.strategy }));
 }
 
 // -------------------- Bot 操作 --------------------

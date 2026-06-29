@@ -8,7 +8,7 @@ const path = require('path');
 const { Server } = require('socket.io');
 const roomManager = require('./roomManager');
 const gameEngine = require('./gameEngine');
-const { BotManager, createBotPlayer } = require('./bot');
+const { BotManager, createBotPlayer, resolveAutoStrategies } = require('./bot');
 const SecurityMiddleware = require('./security');
 
 const PORT = process.env.PORT || 3000;
@@ -199,6 +199,8 @@ io.on('connection', (socket) => {
     }
 
     try {
+      // ★ 自动档解析：根据真人玩家数动态决定 Bot 难度
+      resolveAutoStrategies(room);
       gameEngine.initGame(roomId, room);
       console.log(`[服务器] 房间 ${roomId} 游戏开始！`);
       callback({ success: true });
@@ -264,12 +266,13 @@ io.on('connection', (socket) => {
   });
 
   // --- 添加机器人 ---
-  socket.on('room:add_bot', (roomId, botName, callback) => {
+  socket.on('room:add_bot', (roomId, difficulty, callback) => {
     if (typeof callback !== 'function') callback = () => {};
     try {
       const room = roomManager.getPlayers(roomId);
       const existingNicknames = room.map(p => p.nickname);
-      const bot = createBotPlayer(existingNicknames);
+      const botDifficulty = difficulty || 'auto';
+      const bot = createBotPlayer(existingNicknames, botDifficulty);
       const result = roomManager.addBot(roomId, bot);
       if (!result.success) {
         callback(result);

@@ -120,6 +120,7 @@ socket.on('player:ready', (data) => {
 function updateLobbyUI() {
   const btnStart = document.getElementById('btnStart');
   const btnAddBot = document.getElementById('btnAddBot');
+  const botDifficulty = document.getElementById('botDifficulty');
   const btnSpectate = document.getElementById('btnSpectate');
   const waitingText = document.getElementById('waitingText');
   const playerCount = GameState.getPlayerCount();
@@ -128,6 +129,7 @@ function updateLobbyUI() {
   if (GameState.gameInProgress) {
     if (btnStart) btnStart.style.display = 'none';
     if (btnAddBot) btnAddBot.style.display = 'none';
+    if (botDifficulty) botDifficulty.style.display = 'none';
     if (btnSpectate) btnSpectate.style.display = 'block';
     if (waitingText) {
       waitingText.style.display = 'block';
@@ -139,9 +141,13 @@ function updateLobbyUI() {
   // 正常大厅状态
   if (btnSpectate) btnSpectate.style.display = 'none';
 
-  // 添加机器人按钮：仅房主可见，未满6人
+  // 机器人按钮 + 难度选择：仅房主可见，未满6人
+  const showBotControls = GameState.isHost && playerCount < 6;
   if (btnAddBot) {
-    btnAddBot.style.display = (GameState.isHost && playerCount < 6) ? 'block' : 'none';
+    btnAddBot.style.display = showBotControls ? 'block' : 'none';
+  }
+  if (botDifficulty) {
+    botDifficulty.style.display = showBotControls ? 'inline-block' : 'none';
   }
 
   // 开始按钮：仅房主可见，且 ≥2 人

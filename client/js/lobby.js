@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('房间已满（最多6人）', 'error');
         return;
       }
-      socket.emit('room:add_bot', GameState.roomId, null, (res) => {
+      const diffSelect = document.getElementById('botDifficulty');
+      const difficulty = diffSelect ? diffSelect.value : 'auto';
+      socket.emit('room:add_bot', GameState.roomId, difficulty, (res) => {
         if (!res.success) {
           showToast(res.error || '添加失败', 'error');
         } else {

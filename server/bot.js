@@ -568,8 +568,14 @@ function duelDiceStrategy(playerId, state) {
 
 // -------------------- 创建 Bot 玩家 --------------------
 
-function createBotPlayer(existingNicknames) {
+/**
+ * 创建 Bot 玩家
+ * @param {string[]} existingNicknames - 已被占用的昵称
+ * @param {string} difficulty - 'auto' | 'easy' | 'normal' | 'hard'，默认 'auto'
+ */
+function createBotPlayer(existingNicknames, difficulty) {
   existingNicknames = existingNicknames || [];
+  difficulty = difficulty || 'auto';
 
   // 基础名：从未被使用的名字中随机选
   const available = BOT_NAMES.filter(n => !existingNicknames.includes(n));
@@ -582,15 +588,40 @@ function createBotPlayer(existingNicknames) {
   const num = String(_botCounter).padStart(2, '0');
   const nickname = `${baseName}${num}`;
 
-  const strategy = BOT_STRATEGIES[rand(0, BOT_STRATEGIES.length - 1)];
   return {
     id: 'bot_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
     nickname,
     isBot: true,
-    strategy, // 'easy' / 'normal' / 'hard'
+    strategy: difficulty, // 'auto' | 'easy' | 'normal' | 'hard'
   };
+}
+
+/**
+ * 解析自动难度：根据真人玩家数将 strategy='auto' 的 Bot 转为实际难度
+ * 在 game:start 前调用，直接修改 players 数组
+ * @param {object[]} players - 玩家数组（含 strategy 字段）
+ */
+function resolveAutoStrategies(players) {
+  const humanCount = players.filter(p => !p.isBot).length;
+
+  for (const p of players) {
+    if (!p.isBot) continue;
+    const s = p.strategy || 'auto';
+    if (s === 'auto') {
+      if (humanCount <= 1) {
+        p.strategy = 'hard';                     // 孤军奋战，给强力对手
+      } else if (humanCount === 2) {
+        p.strategy = Math.random() < 0.3 ? 'hard' : 'normal';  // 70%普通 30%困难
+      } else if (humanCount === 3) {
+        p.strategy = 'normal';                   // 三人成虎，博弈足够
+      } else {
+        p.strategy = Math.random() < 0.3 ? 'normal' : 'easy';  // 4+真人：70%简单 30%普通
+      }
+      console.log(`[Bot] ${p.nickname} 自动档 → ${p.strategy} (${humanCount}真人)`);
+    }
+  }
 }
 
 // -------------------- 导出 --------------------
 
-module.exports = { BotManager, createBotPlayer };
+module.exports = { BotManager, createBotPlayer, resolveAutoStrategies };
