@@ -230,20 +230,24 @@
     <section id="view-game" class="view">
       <div class="game-container">
 
-        <!-- 顶部相位栏：图标 + 回合/阶段 + 计时条 -->
+        <!-- 顶部相位栏：回合/阶段文字 -->
         <div class="game-phase-bar" id="gamePhaseBar">
-          <div class="phase-icon-wrap" id="phaseIconWrap">
-            <div class="phase-icon" id="phaseIcon">🏺</div>
-            <div class="phase-card-mini" id="phaseCardMini" style="display:none;">
-              <img class="phase-card-img" id="phaseCardImg" src="" alt="" />
-              <span class="phase-card-score" id="phaseCardScore"></span>
-            </div>
-          </div>
           <div class="phase-info">
             <span class="game-round" id="gameRoundLabel">第 1/10 轮</span>
             <span class="game-phase" id="gamePhaseLabel">拍卖阶段</span>
-            <span class="phase-card-name" id="phaseCardName"></span>
           </div>
+        </div>
+
+        <!-- 相位视觉展示区：占屏幕 1/3~1/4 -->
+        <div class="game-phase-visual" id="gamePhaseVisual">
+          <div class="phase-visual-icon-wrap" id="phaseIconWrap">
+            <div class="phase-visual-icon" id="phaseIcon">🏺</div>
+            <div class="phase-visual-card" id="phaseCardMini" style="display:none;">
+              <img class="phase-visual-card-img" id="phaseCardImg" src="" alt="" />
+              <span class="phase-visual-card-score" id="phaseCardScore"></span>
+            </div>
+          </div>
+          <div class="phase-visual-name" id="phaseCardName"></div>
           <div class="phase-timer-bar" id="globalTimerBar"><div class="phase-timer-fill" id="globalTimerFill"></div></div>
         </div>
 
@@ -257,6 +261,7 @@
               <div class="my-status-item" id="myEffects"></div>
             </div>
             <div class="game-other-players" id="gameOtherPlayers">
+              <div class="other-list-title">👥 玩家列表</div>
               <div class="other-list" id="otherList"></div>
             </div>
           </div>

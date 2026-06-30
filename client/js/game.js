@@ -256,7 +256,7 @@ function leaveSpectate() {
   goToMode();
 }
 
-// ==================== 顶部相位栏（状态+卡牌图标+计时条） ====================
+// ==================== 顶部相位栏 + 视觉展示区 ====================
 
 const PHASE_ICONS = {
   auction: '🏛️',
@@ -1794,40 +1794,50 @@ function showCardPopup(cardId, cardName, isHidden, optScore, optEffect) {
 }
 
 function _renderPlayerList(view) {
-  const allPlayers = view.players;
+  const allPlayers = view.players || [];
   const list = document.getElementById('otherList');
   const container = document.getElementById('gameOtherPlayers');
 
-  if (allPlayers.length === 0) {
-    container.style.display = 'none';
+  if (!list || !container) {
+    console.warn('[Game] 玩家列表 DOM 未找到');
     return;
   }
-  container.style.display = '';
+
+  if (allPlayers.length === 0) {
+    container.style.display = 'none';
+    list.innerHTML = '';
+    console.log('[Game] 玩家列表为空');
+    return;
+  }
+  container.style.display = 'flex';
 
   // 计算最高卡牌分和最高资金
   let maxScore = -1, maxFunds = -1;
   for (const p of allPlayers) {
-    if (p.cardScore > maxScore) maxScore = p.cardScore;
-    if (p.funds > maxFunds) maxFunds = p.funds;
+    if ((p.cardScore || 0) > maxScore) maxScore = p.cardScore || 0;
+    if ((p.funds || 0) > maxFunds) maxFunds = p.funds || 0;
   }
 
   list.innerHTML = allPlayers.map(p => {
+    const isMe = p.isMe || p.id === socket.id;
     const cardScore = p.cardScore || 0;
+    const funds = p.funds || 0;
+    const nickname = p.nickname || '未知';
     const isTopScore = cardScore > 0 && cardScore === maxScore && maxScore > 0;
-    const isRichest = p.funds === maxFunds && maxFunds > 0;
+    const isRichest = funds === maxFunds && maxFunds > 0;
     const botTag = p.isBot ? ' <span class="bot-tag">AI</span>' : '';
     const managedTag = p.managed ? ' <span class="managed-badge">托管</span>' : '';
     const auctioneerIcon = p.id === view.auctioneerId ? '👑 ' : '';
 
     return `
-      <div class="player-row${p.isMe ? ' is-me' : ''}" data-player-id="${p.id}" onclick="showPlayerDetailPopup(this, '${p.id}')">
+      <div class="player-row${isMe ? ' is-me' : ''}" data-player-id="${p.id}" onclick="showPlayerDetailPopup(this, '${p.id}')">
         <span class="pl-nick">
           ${isTopScore ? '<span class="pl-badge pl-badge-crown">👑</span>' : ''}
-          ${auctioneerIcon}${botTag}${managedTag}${p.nickname}
-          ${p.isMe ? '<span class="me-tag">你</span>' : ''}
+          ${auctioneerIcon}${botTag}${managedTag}${nickname}
+          ${isMe ? '<span class="me-tag">你</span>' : ''}
           ${isRichest ? '<span class="pl-badge pl-badge-rich">💎</span>' : ''}
         </span>
-        <span class="pl-stats">💰$${p.funds} ⭐${cardScore}</span>
+        <span class="pl-stats">💰$${funds} ⭐${cardScore}</span>
         <span class="pl-expand-icon">▶</span>
       </div>
     `;
@@ -1896,10 +1906,11 @@ function showPlayerDetailPopup(rowEl, playerId) {
   const popup = document.createElement('div');
   popup.id = 'playerPopup';
   popup.className = 'player-popup';
+  const isMe = p.isMe || p.id === socket.id;
   popup.innerHTML = `
     <span class="pp-close" onclick="_closePlayerPopup()">✕</span>
-    <div class="pp-header">${p.nickname} ${p.isMe ? '<span class="me-tag">你</span>' : ''}</div>
-    <div class="pp-stats">💰 $${p.funds} · ⭐ ${p.cardScore||0}分 · 🃏 ${p.cardCount||0}张 ${effects}</div>
+    <div class="pp-header">${p.nickname || '未知'} ${isMe ? '<span class="me-tag">你</span>' : ''}</div>
+    <div class="pp-stats">💰 $${p.funds || 0} · ⭐ ${p.cardScore||0}分 · 🃏 ${p.cardCount||0}张 ${effects}</div>
     ${cardDetail ? `<div class="pp-cards-section">${cardDetail}</div>` : ''}
     ${skillStr}
   `;
