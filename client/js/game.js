@@ -2128,7 +2128,6 @@ function showCardPool() {
   grid.innerHTML = _cardPoolData.map(c => {
     const acquiredClass = c.acquired ? ' acquired' : '';
     const scoreClass = 'score-' + (c.score || 1);
-    const dealtClass = c.dealt ? '' + ' dealt';
     const emojiHtml = getCardFramedImageHtml(c.id, 'frame-sm');
 
     // 状态标签
