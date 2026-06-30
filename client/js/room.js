@@ -44,6 +44,13 @@ socket.on('room:created', (data) => {
   GameState.isHost = true;
 
   document.getElementById('roomIdDisplay').textContent = data.roomId;
+  // 显示房间模式标签
+  const modeTag = document.getElementById('lobbyModeTag');
+  if (modeTag) {
+    const mode = getModeById(data.mode || 'classic');
+    modeTag.textContent = `${mode.icon} ${mode.name}`;
+    modeTag.style.display = 'inline-block';
+  }
   renderPlayerList(data.players);
   updateLobbyUI();
   showView(Views.LOBBY);
@@ -64,6 +71,13 @@ socket.on('room:joined', (data) => {
   GameState.isHost = !!(me && me.isHost);
 
   document.getElementById('roomIdDisplay').textContent = data.roomId;
+  // 显示房间模式标签
+  const modeTag = document.getElementById('lobbyModeTag');
+  if (modeTag && GameState.selectedMode) {
+    const m = GameState.selectedMode;
+    modeTag.textContent = `${m.icon} ${m.name}`;
+    modeTag.style.display = 'inline-block';
+  }
   renderPlayerList(data.players);     // ← 此时 GameState.isHost 已正确
   updateLobbyUI();
   showView(Views.LOBBY);

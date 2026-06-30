@@ -101,9 +101,15 @@ function selectMode(modeId) {
   // 更新最大玩家选择器
   updateMaxPlayerSelect(mode);
 
-  // 更新玩家信息显示
+  // 更新玩家信息显示（含昵称输入框同步）
   const nameSpan = document.getElementById('roomPlayerName');
   if (nameSpan) nameSpan.textContent = GameState.nickname || '';
+  const nickInput = document.getElementById('nicknameInput');
+  if (nickInput && GameState.nickname) {
+    nickInput.value = GameState.nickname;
+    // 触发 input 事件以更新按钮状态
+    nickInput.dispatchEvent(new Event('input'));
+  }
 
   showView(Views.LOGIN);
 }

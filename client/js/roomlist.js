@@ -29,10 +29,14 @@ function loadRoomList() {
       return;
     }
 
-    listEl.innerHTML = res.rooms.map(r => `
+    listEl.innerHTML = res.rooms.map(r => {
+      const mode = (r.mode && typeof getModeById === 'function') ? getModeById(r.mode) : null;
+      const modeTag = mode ? `<span class="room-list-mode">${mode.icon} ${mode.name}</span>` : '';
+      return `
       <div class="room-list-item" onclick="joinPublicRoom('${r.roomId}')">
         <div class="room-list-item-left">
           <span class="room-list-num">#${r.roomId}</span>
+          ${modeTag}
           <span class="room-list-host">👑 ${r.hostNickname}</span>
         </div>
         <div class="room-list-item-right">
@@ -40,7 +44,8 @@ function loadRoomList() {
           <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); joinPublicRoom('${r.roomId}')">加入</button>
         </div>
       </div>
-    `).join('');
+    `;
+  }).join('');
   });
 }
 
@@ -67,6 +72,14 @@ function joinPublicRoom(roomId) {
         GameState.gameInProgress = true;
 
         document.getElementById('roomIdDisplay').textContent = roomId;
+        // 设置模式标签
+        const modeTag = document.getElementById('lobbyModeTag');
+        if (modeTag) {
+          const mode = (response.mode && typeof getModeById === 'function')
+            ? getModeById(response.mode) : (GameState.selectedMode || { icon: '🏺', name: '经典竞拍' });
+          modeTag.textContent = `${mode.icon} ${mode.name}`;
+          modeTag.style.display = 'inline-block';
+        }
         renderPlayerList(response.players || []);
         updateLobbyUI();
         showView(Views.LOBBY);

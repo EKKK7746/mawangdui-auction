@@ -72,6 +72,10 @@
           <!-- 由 mode.js 动态生成 -->
         </div>
 
+        <button class="btn btn-outline btn-card-guide" onclick="openIntro()">
+          📜 卡牌图鉴 — 文物介绍与效果
+        </button>
+
         <!-- 从模式选择界面加入房间的弹窗 -->
         <div class="mode-join-panel" id="modeJoinPanel" style="display:none;">
           <div class="mode-join-header">
@@ -166,6 +170,7 @@
     <section id="view-lobby" class="view">
       <div class="lobby-container">
         <div class="room-id-area">
+          <div class="room-mode-tag" id="lobbyModeTag"></div>
           <div class="room-id-label">房间号</div>
           <div class="room-id-value" id="roomIdDisplay">------</div>
           <button id="btnCopy" class="btn btn-outline">📋 复制房间号</button>
@@ -198,6 +203,9 @@
           </button>
           <button id="btnLeaveLobby" class="btn btn-danger">
             离开房间
+          </button>
+          <button id="btnCardGuide" class="btn btn-outline" onclick="openIntro()" style="margin-top:6px;width:100%;">
+            📜 卡牌图鉴
           </button>
         </div>
       </div>
