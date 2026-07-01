@@ -55,6 +55,10 @@ socket.on('game_state_update', (view) => {
     // 更新玩家列表（每个玩家各自的状态 reset 后会不同）
     GameState.players = view.players || [];
 
+    // 同步自己的房主身份，防止使用无 isHost 的缓存状态
+    const me = (view.players || []).find(p => p.id === socket.id);
+    GameState.isHost = !!(me && me.isHost);
+
     const roomIdEl = document.getElementById('roomIdDisplay');
     if (roomIdEl) roomIdEl.textContent = GameState.roomId;
 
@@ -70,6 +74,11 @@ socket.on('game_state_update', (view) => {
   // 检测是否是房主重启游戏的等待状态（全员进入大厅）
   if (view.phase === 'waiting') {
     showView(Views.LOBBY);
+
+    // 同步玩家列表与房主身份
+    GameState.players = view.players || [];
+    const me = (view.players || []).find(p => p.id === socket.id);
+    GameState.isHost = !!(me && me.isHost);
 
     const roomIdEl = document.getElementById('roomIdDisplay');
     if (roomIdEl) roomIdEl.textContent = GameState.roomId;

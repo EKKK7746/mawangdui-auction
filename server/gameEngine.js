@@ -1405,6 +1405,7 @@ function getPlayerView(fullState, playerId) {
       hasDoubleComm: p.cards.some(c => c.id === 'sq'),
       hasUpgrade: p.cards.some(c => c.id === 'dhft' && !c.used),
       isMe: p.id === playerId,
+      isHost: !!p.isHost,
     })),
   };
 
