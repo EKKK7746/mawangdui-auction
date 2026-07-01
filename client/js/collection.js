@@ -90,7 +90,7 @@ function _loadCollection() {
     }
     localStorage.setItem(CHEAT_ACTIVE_KEY, '1');
     console.log('[Collection] 🎮 labrat 作弊模式：已备份旧存档');
-    return _getFullCollection();
+    return _getFullCollectionWithSkins();
   }
 
   if (!isLabrat && wasLabrat) {
@@ -106,7 +106,7 @@ function _loadCollection() {
   }
 
   if (isLabrat) {
-    return _getFullCollection();
+    return _getFullCollectionWithSkins();
   }
 
   try {
@@ -165,6 +165,19 @@ function _getFullCollection() {
   data.stats.winStreak = 99;
   data.stats.bestWinStreak = 99;
   data.stats.totalAuctioneerRounds = 999;
+  return data;
+}
+
+/** 获取全解锁集合数据（保留已装备的皮肤） */
+function _getFullCollectionWithSkins() {
+  const data = _getFullCollection();
+  // 从 COLLECTION_KEY 读取当前已装备的皮肤（本次 labrat 会话中已装备的记录）
+  try {
+    const saved = JSON.parse(localStorage.getItem(COLLECTION_KEY) || '{}');
+    if (saved && saved.equippedSkin) {
+      Object.assign(data.equippedSkin, saved.equippedSkin);
+    }
+  } catch (e) { /* ignore */ }
   return data;
 }
 
