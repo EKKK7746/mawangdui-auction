@@ -697,31 +697,6 @@ function _renderTrade(view, container) {
   // 清除之前的倒计时
   if (_tradeCountdownInterval) { clearInterval(_tradeCountdownInterval); _tradeCountdownInterval = null; }
 
-  // 倒计时
-  const deadline = view.turnDeadline;
-  if (deadline) {
-    const totalSec = 30; // 服务端 TRADE_PHASE_SECONDS
-    const updateCountdown = () => {
-      const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
-      const pct = (remaining / totalSec) * 100;
-      const fillEl = document.getElementById('tradeTimerFill');
-      const textEl = document.getElementById('tradeTimerText');
-      if (fillEl) {
-        fillEl.style.width = pct + '%';
-        if (pct < 30) fillEl.style.background = '#C43A31';
-        else if (pct < 60) fillEl.style.background = '#D4A017';
-        else fillEl.style.background = '#5B7B5E';
-      }
-      if (textEl) textEl.textContent = remaining === 0 ? '已结束' : `${remaining}秒`;
-      if (remaining <= 0 && _tradeCountdownInterval) {
-        clearInterval(_tradeCountdownInterval);
-        _tradeCountdownInterval = null;
-      }
-    };
-    updateCountdown();
-    _tradeCountdownInterval = setInterval(updateCountdown, 1000);
-  }
-
   // 其他玩家状态
   const playersHtml = view.players.filter(p => p.id !== socket.id && !p.isBot).map(p => {
     const quota = view.tradeQuota ? (view.tradeQuota[p.id] || 0) : 0;
@@ -811,6 +786,32 @@ function _renderTrade(view, container) {
       </button>
     </div>
   `;
+
+  // 倒计时 — 仿照 settle timer：先渲染 DOM，再启动计时器
+  const deadline = view.turnDeadline;
+  if (deadline) {
+    const totalSec = 30; // 服务端 TRADE_PHASE_SECONDS
+    let remain = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    const fillEl = document.getElementById('tradeTimerFill');
+    const textEl = document.getElementById('tradeTimerText');
+    const updateCountdown = () => {
+      const pct = (remain / totalSec) * 100;
+      if (fillEl) {
+        fillEl.style.width = pct + '%';
+        if (pct < 30) fillEl.style.background = '#C43A31';
+        else if (pct < 60) fillEl.style.background = '#D4A017';
+        else fillEl.style.background = '#5B7B5E';
+      }
+      if (textEl) textEl.textContent = remain === 0 ? '已结束' : `${remain}秒`;
+      if (remain <= 0) {
+        clearInterval(_tradeCountdownInterval);
+        _tradeCountdownInterval = null;
+      }
+      remain--;
+    };
+    updateCountdown();
+    _tradeCountdownInterval = setInterval(updateCountdown, 1000);
+  }
 
   // 如果无配额也无卡，自动跳过
   if (!hasQuota && !hasProposal) {
