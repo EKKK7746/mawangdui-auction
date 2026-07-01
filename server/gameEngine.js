@@ -139,20 +139,15 @@ function broadcast(roomId) {
     if (_onBroadcast) _onBroadcast(roomId);
     return;
   }
-  console.log(`[Broadcast] 房间 ${roomId} 广播给 ${room.size} 个 socket:`, [...room]);
-  let ok = 0, fail = 0;
   for (const sid of room) {
     try {
       const isPlayer = state.players.some(p => p.id === sid);
       const view = isPlayer ? getPlayerView(state, sid) : getSpectatorView(state);
       _io.to(sid).emit('game_state_update', view);
-      ok++;
     } catch (err) {
-      fail++;
       console.error(`[Broadcast] view 生成失败 sid=${sid}:`, err.message);
     }
   }
-  console.log(`[Broadcast] 完成 roomId=${roomId}, ok=${ok}, fail=${fail}, phase=${state.phase}`);
   // 触发 bot 调度
   if (_onBroadcast) _onBroadcast(roomId);
 }
