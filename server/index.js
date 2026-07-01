@@ -514,6 +514,8 @@ io.on('connection', (socket) => {
         botManager.processBots(r.roomId);
         // 将玩家加回 roomManager（保留房间成员身份，方便重连）
         if (!r.destroyed) {
+          // 托管玩家重新加回时，不可能是房主
+          r.player.isHost = false;
           roomManager.reAddPlayer(r.roomId, r.player);
         }
       }

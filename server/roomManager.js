@@ -126,6 +126,8 @@ function leaveRoom(socket, roomId) {
     // 房主离开，转移给第一个人类玩家
     const newHost = _findFirstHuman(room);
     if (newHost) {
+      // 先清空所有玩家的房主身份，再设置唯一新房主
+      room.players.forEach(p => p.isHost = false);
       newHost.isHost = true;
       room.hostSocketId = newHost.id;
       console.log(`[房间] 房主转移至 ${newHost.nickname}`);
@@ -162,6 +164,8 @@ function handleDisconnect(socket) {
       } else if (player.isHost) {
         const newHost = _findFirstHuman(room);
         if (newHost) {
+          // 先清空所有玩家的房主身份，再设置唯一新房主
+          room.players.forEach(p => p.isHost = false);
           newHost.isHost = true;
           room.hostSocketId = newHost.id;
         }
@@ -309,6 +313,8 @@ function reAddPlayer(roomId, player) {
   if (!room) return false;
   // 避免重复添加
   if (room.players.some(p => p.id === player.id)) return true;
+  // 托管玩家重新加回房间时，不可能是房主
+  player.isHost = false;
   room.players.push(player);
   console.log(`[房间] 托管玩家 ${player.nickname}(${player.id}) 保留在房间 ${roomId}`);
   return true;
@@ -329,7 +335,14 @@ function updatePlayerId(roomId, oldId, newId, nickname) {
   }
   player.id = newId;
   if (player.nickname !== nickname) player.nickname = nickname;
-  if (room.hostSocketId === oldId) room.hostSocketId = newId;
+
+  // 如果当前房间已有房主且不是该玩家，则取消其房主身份
+  if (room.hostSocketId && room.hostSocketId !== oldId) {
+    player.isHost = false;
+  } else if (player.isHost) {
+    // 该玩家就是原房主，更新 hostSocketId
+    room.hostSocketId = newId;
+  }
   console.log(`[房间] 更新玩家ID: ${oldId} → ${newId} (${nickname})`);
   return true;
 }

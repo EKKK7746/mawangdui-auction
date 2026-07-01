@@ -10,7 +10,18 @@ function renderPlayerList(players) {
 
   const isHost = GameState.isHost;
 
-  list.innerHTML = players.map((p, index) => {
+  // 防御：只承认一个房主（避免服务端双房主时 UI 混乱）
+  let hostSeen = false;
+  const sanitized = players.map(p => {
+    const p2 = { ...p };
+    if (p2.isHost) {
+      if (hostSeen) p2.isHost = false;
+      hostSeen = true;
+    }
+    return p2;
+  });
+
+  list.innerHTML = sanitized.map((p, index) => {
     const pHost = !!p.isHost;
     const isMe = GameState.isSelf(p.id);
     const canKick = isHost && !isMe && !pHost; // 房主可以踢非自己、非原房主的人
@@ -88,6 +99,11 @@ socket.on('room:joined', (data) => {
 socket.on('room:player_joined', (data) => {
   console.log('[Room] 玩家加入:', data.player.nickname);
   GameState.players = data.players;
+
+  // 根据服务器最新状态同步自己的房主身份
+  const me = data.players.find(p => p.id === socket.id);
+  GameState.isHost = !!(me && me.isHost);
+
   renderPlayerList(data.players);
   updateLobbyUI();
 });
