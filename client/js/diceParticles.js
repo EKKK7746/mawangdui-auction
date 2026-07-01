@@ -106,7 +106,7 @@
 
     // 渲染文字（按目标区域缩放，避免小画布上文字被裁剪）
     ctx.fillStyle = '#FFFFFF';
-    const fontSize = Math.min(64, Math.floor(Math.min(w, h) * 0.9));
+    const fontSize = Math.min(80, Math.floor(Math.min(w, h) * 0.75));
     ctx.font = `bold ${fontSize}px "Georgia", "Times New Roman", serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -201,11 +201,12 @@
 
     // 生成骰子轮廓目标点
     const verts = polygonVertices(CX, CY, diceR, sides);
-    const outlineTargets = samplePolygonEdges(verts, Math.floor(PARTICLE_COUNT * 0.55));
+    const outlineTargets = samplePolygonEdges(verts, Math.floor(PARTICLE_COUNT * 0.45));
 
-    // 数字采样区缩放
-    const numW = NUMBER_W * (W / 360);
-    const numH = NUMBER_H * (H / 300);
+    // 数字采样区缩放 — 按画布短边比例，确保移动端也清晰
+    const numBox = Math.min(W, H) * 0.50;
+    const numW = numBox;
+    const numH = numBox;
 
     // 生成数字形状目标点
     const numTargets = sampleNumberShape(resultNum, CX, CY, numW, numH);
@@ -222,8 +223,8 @@
       const verts3 = polygonVertices(CX3, CY3, R2, sides);
       outlineTargets2 = samplePolygonEdges(verts2, Math.floor(PARTICLE_COUNT * 0.25));
       outlineTargets3 = samplePolygonEdges(verts3, Math.floor(PARTICLE_COUNT * 0.25));
-      numTargets2 = sampleNumberShape(resultNum, CX2, CY2, 50 * (W / 360), 50 * (H / 300));
-      numTargets3 = sampleNumberShape(v2, CX3, CY3, 50 * (W / 360), 50 * (H / 300));
+      numTargets2 = sampleNumberShape(resultNum, CX2, CY2, 70 * (W / 360), 70 * (H / 300));
+      numTargets3 = sampleNumberShape(v2, CX3, CY3, 70 * (W / 360), 70 * (H / 300));
 
       // 合并
       return [
@@ -270,6 +271,8 @@
       lastTime: performance.now(),
       diceType,
       resultNum,
+      isReroll,
+      v2,
       CX, CY,
       soundPlayed: { shake: false, pop: false }
     };
@@ -398,6 +401,25 @@
       grad.addColorStop(1, 'rgba(212,175,55,0)');
       ctx.fillStyle = grad;
       ctx.fillRect(CX - DICE_OUTLINE_R * 2, CY - DICE_OUTLINE_R * 2, DICE_OUTLINE_R * 4, DICE_OUTLINE_R * 4);
+      ctx.restore();
+
+      // ★ 兜底：中心绘制清晰大数字，确保移动端可见
+      ctx.save();
+      ctx.fillStyle = '#C43A31';
+      ctx.shadowColor = 'rgba(255,255,255,0.9)';
+      ctx.shadowBlur = 8;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      if (state.isReroll && state.v2 != null) {
+        const fontSize = Math.min(56, Math.floor(Math.min(W, H) * 0.22));
+        ctx.font = `bold ${fontSize}px "Georgia", "Times New Roman", serif`;
+        ctx.fillText(String(state.resultNum), W * 0.25, H / 2);
+        ctx.fillText(String(state.v2), W * 0.75, H / 2);
+      } else {
+        const fontSize = Math.min(90, Math.floor(Math.min(W, H) * 0.38));
+        ctx.font = `bold ${fontSize}px "Georgia", "Times New Roman", serif`;
+        ctx.fillText(String(state.resultNum), CX, CY);
+      }
       ctx.restore();
     }
 

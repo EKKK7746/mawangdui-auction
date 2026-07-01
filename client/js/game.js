@@ -1903,20 +1903,27 @@ function _renderPlayerList(view) {
     const nickname = p.nickname || '未知';
     const isTopScore = cardScore > 0 && cardScore === maxScore && maxScore > 0;
     const isRichest = funds === maxFunds && maxFunds > 0;
-    const botTag = p.isBot ? ' <span class="bot-tag">AI</span>' : '';
-    const managedTag = p.managed ? ' <span class="managed-badge">托管</span>' : '';
-    const auctioneerIcon = p.id === view.auctioneerId ? '👑 ' : '';
+    const botTag = p.isBot ? '<span class="pl-tag pl-tag-bot">AI</span>' : '';
+    const managedTag = p.managed ? '<span class="pl-tag pl-tag-managed">托管</span>' : '';
+    const avatarText = (nickname.charAt(0) || '?').toUpperCase();
 
     return `
       <div class="player-row${isMe ? ' is-me' : ''}" data-player-id="${p.id}" onclick="showPlayerDetailPopup(this, '${p.id}')">
-        <span class="pl-nick">
-          ${isTopScore ? '<span class="pl-badge pl-badge-crown">👑</span>' : ''}
-          ${auctioneerIcon}${botTag}${managedTag}${nickname}
-          ${isMe ? '<span class="me-tag">你</span>' : ''}
-          ${isRichest ? '<span class="pl-badge pl-badge-rich">💎</span>' : ''}
-        </span>
-        <span class="pl-stats">💰$${funds} ⭐${cardScore}</span>
-        <span class="pl-expand-icon">▶</span>
+        <div class="pl-avatar-col">
+          <div class="pl-avatar">${avatarText}</div>
+          <div class="pl-tag-row">${botTag}${managedTag}</div>
+        </div>
+        <div class="pl-main">
+          <div class="pl-nick" title="${nickname}">${nickname}</div>
+          <div class="pl-stats">💰$${funds} · ⭐${cardScore}</div>
+        </div>
+        <div class="pl-right">
+          <div class="pl-icon-group">
+            ${isRichest ? '<span class="pl-icon-box pl-icon-diamond" title="资金领先">💎</span>' : ''}
+            ${isTopScore ? '<span class="pl-icon-box pl-icon-crown" title="卡牌分领先">👑</span>' : ''}
+          </div>
+          <span class="pl-expand-icon">▶</span>
+        </div>
       </div>
     `;
   }).join('');
