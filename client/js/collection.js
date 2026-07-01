@@ -4,6 +4,8 @@
 // ============================================================
 
 const COLLECTION_KEY = 'mwCollection';
+const TESTIFICATE_BACKUP_KEY = 'mwCollection_testificate_backup';
+const TESTIFICATE_ACTIVE_KEY = 'mwCollection_testificate_active';
 
 // 10 张文物卡牌定义（与 server/gameEngine.js CARDS 对应）
 const ARTIFACT_IDS = [
@@ -76,11 +78,41 @@ function _defaultCollection() {
 
 // ==================== 基础读写 ====================
 function _loadCollection() {
+  // testificate 作弊模式：检测状态切换
+  const wasTestificate = localStorage.getItem(TESTIFICATE_ACTIVE_KEY) === '1';
+  const isTestificate = _isTestificate();
+
+  if (isTestificate && !wasTestificate) {
+    // 刚切换到 testificate：备份旧存档
+    const oldData = localStorage.getItem(COLLECTION_KEY);
+    if (oldData) {
+      localStorage.setItem(TESTIFICATE_BACKUP_KEY, oldData);
+    }
+    localStorage.setItem(TESTIFICATE_ACTIVE_KEY, '1');
+    console.log('[Collection] 🎮 testificate 作弊模式：已备份旧存档');
+    return _getFullCollection();
+  }
+
+  if (!isTestificate && wasTestificate) {
+    // 刚退出 testificate：恢复旧存档
+    const backup = localStorage.getItem(TESTIFICATE_BACKUP_KEY);
+    if (backup) {
+      localStorage.setItem(COLLECTION_KEY, backup);
+      localStorage.removeItem(TESTIFICATE_BACKUP_KEY);
+    }
+    localStorage.removeItem(TESTIFICATE_ACTIVE_KEY);
+    console.log('[Collection] 🔄 退出作弊模式，已恢复旧存档');
+    // 继续正常加载
+  }
+
+  if (isTestificate) {
+    return _getFullCollection();
+  }
+
   try {
     const raw = localStorage.getItem(COLLECTION_KEY);
     if (!raw) return _defaultCollection();
     const data = JSON.parse(raw);
-    // 深度合并，防止新增字段缺失
     return _deepMerge(_defaultCollection(), data);
   } catch (e) {
     console.warn('[Collection] 数据损坏，重置', e);
@@ -94,6 +126,46 @@ function _saveCollection(data) {
   } catch (e) {
     console.error('[Collection] 保存失败', e);
   }
+}
+
+/** 获取当前玩家昵称 */
+function _getNickname() {
+  try {
+    const raw = localStorage.getItem('mwPlayer');
+    if (!raw) return '';
+    const data = JSON.parse(raw);
+    return data.nickname || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+/** 检查是否为 testificate 作弊模式 */
+function _isTestificate() {
+  return _getNickname() === 'testificate';
+}
+
+/** 获取全解锁集合数据 */
+function _getFullCollection() {
+  const data = _defaultCollection();
+  // 收集全部文物
+  for (const id of ARTIFACT_IDS) {
+    data.artifacts[id] = { count: 99, firstWon: Date.now() };
+  }
+  // 解锁全部成就
+  for (const achId of Object.keys(ACHIEVEMENTS)) {
+    data.achievements[achId] = { unlockedAt: Date.now() };
+  }
+  // 全统计满值
+  data.stats.totalGames = 999;
+  data.stats.totalWins = 999;
+  data.stats.totalCardsWon = 9999;
+  data.stats.bestScore = 999;
+  data.stats.bestRank = 1;
+  data.stats.winStreak = 99;
+  data.stats.bestWinStreak = 99;
+  data.stats.totalAuctioneerRounds = 999;
+  return data;
 }
 
 function _deepMerge(defaults, data) {
@@ -239,6 +311,55 @@ function recordAuctioneerRound() {
   _saveCollection(data);
 }
 
+/** 局内实时成就检查（每轮结束后调用） */
+function checkAchievementsRealtime(view, myPlayerId) {
+  if (!view || view.phase === 'finished') return null;
+  const data = _loadCollection();
+  const me = view.players.find(p => p.id === myPlayerId);
+  if (!me) return null;
+
+  const newAch = [];
+  const ach = data.achievements;
+
+  // 检查收集类成就（新增卡牌时触发）
+  if (me.cards) {
+    const uniqueCards = new Set([...Object.keys(data.artifacts)]);
+    for (const card of me.cards) {
+      uniqueCards.add(card.id || card);
+    }
+    const count = uniqueCards.size;
+    if (!ach.collector_5 && count >= 5) {
+      ach.collector_5 = { unlockedAt: Date.now() };
+      newAch.push('collector_5');
+    }
+    if (!ach.collector_10 && count >= 10) {
+      ach.collector_10 = { unlockedAt: Date.now() };
+      newAch.push('collector_10');
+    }
+    if (!ach.collector_all && count >= 20) {
+      ach.collector_all = { unlockedAt: Date.now() };
+      newAch.push('collector_all');
+    }
+  }
+
+  // 检查 d4_winner（通过 _lastDuelWinType 标记）
+  if (!ach.d4_winner && data.stats._lastDuelWinType === 'd4') {
+    ach.d4_winner = { unlockedAt: Date.now() };
+    newAch.push('d4_winner');
+  }
+
+  // 检查 auctioneer_5
+  if (!ach.auctioneer_5 && (data.stats.totalAuctioneerRounds || 0) >= 5) {
+    ach.auctioneer_5 = { unlockedAt: Date.now() };
+    newAch.push('auctioneer_5');
+  }
+
+  if (newAch.length > 0) {
+    _saveCollection(data);
+  }
+  return newAch.length > 0 ? newAch : null;
+}
+
 /** 装备皮肤 */
 function equipSkin(type, skinId) {
   const validTypes = ['avatar', 'avatarFrame', 'diceEffect'];
@@ -303,14 +424,23 @@ function applyAvatarSkin(el) {
   if (avatarId !== 'default') {
     const avatarSkin = getSkinInfo('avatar', avatarId);
     if (avatarSkin && avatarSkin.gradient) {
-      el.style.background = avatarSkin.gradient;
+      el.style.setProperty('background', avatarSkin.gradient, 'important');
     }
   }
   // 头像框
   if (frameId !== 'default') {
     const frameSkin = getSkinInfo('avatarFrame', frameId);
     if (frameSkin && frameSkin.css) {
-      el.style.cssText += ';' + frameSkin.css;
+      // box-shadow: ... → 直接拆分应用到 style
+      const parts = frameSkin.css.split(';').filter(s => s.trim());
+      for (const part of parts) {
+        const colonIdx = part.indexOf(':');
+        if (colonIdx > 0) {
+          const prop = part.substring(0, colonIdx).trim();
+          const val = part.substring(colonIdx + 1).trim();
+          el.style.setProperty(prop, val, 'important');
+        }
+      }
     }
   }
 }

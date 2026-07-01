@@ -1404,7 +1404,6 @@ function proposeTrade(roomId, fromId, toId, fromCards, fromGold, toCards, toGold
   const from = state.players.find(p => p.id === fromId);
   const to = state.players.find(p => p.id === toId);
   if (!from || !to) return { error: '玩家不存在' };
-  if (to.isBot) return { error: '不能与 AI 玩家交易' };
   if (fromId === toId) return { error: '不能与自己交易' };
 
   // 验证卡牌归属
@@ -1456,7 +1455,8 @@ function proposeTrade(roomId, fromId, toId, fromCards, fromGold, toCards, toGold
     toGold,
   };
 
-  _io.to(toId).emit('trade:proposal', proposalView);
+  // 向全房间公示交易提案
+  _io.to(roomId).emit('trade:proposal', { ...proposalView, toId, toNick });
   broadcast(roomId);
   return { ok: true };
 }
@@ -1531,15 +1531,17 @@ function skipTrade(roomId, playerId) {
   state._tradeSkipped.add(playerId);
   console.log(`[引擎] ${state.players.find(p => p.id === playerId)?.nickname} 跳过交易`);
 
-  // 检查是否所有人都跳过了
+  // 检查是否所有人都无法行动了（有活跃提案时等待回应，不提前结束）
+  if (state._tradeProposal && !state._tradeProposal.responded) {
+    broadcast(roomId);
+    return { ok: true, waiting: true };
+  }
   const allDone = state.players.every(p => {
-    // AI 自动跳过
     if (p.isBot) return true;
-    // 无交易次数的自动跳过
-    if (_getTradeQuota(state, p.id) <= 0) return true;
-    // 无卡牌的自动跳过
     if (p.cards.length === 0) return true;
-    return state._tradeSkipped.has(p.id);
+    // 有交易配额且未跳过的玩家还可能发起交易
+    if (_getTradeQuota(state, p.id) > 0 && !state._tradeSkipped.has(p.id)) return false;
+    return true;
   });
 
   if (allDone) {
@@ -1745,16 +1747,15 @@ function getPlayerView(fullState, playerId) {
       }
       if (fullState._tradeProposal) {
         const tp = fullState._tradeProposal;
-        const isInvolved = playerId === tp.fromId || playerId === tp.toId;
         base.tradeProposal = {
           fromId: tp.fromId,
           toId: tp.toId,
           responded: tp.responded,
-          // 只有交易双方能看到具体提案内容
-          fromCards: isInvolved ? (tp.fromCards || []).map(c => ({ id: c.id, name: c.name, score: c.score })) : [],
-          fromGold: isInvolved ? tp.fromGold : 0,
-          toCards: isInvolved ? (tp.toCards || []).map(c => ({ id: c.id, name: c.name, score: c.score })) : [],
-          toGold: isInvolved ? tp.toGold : 0,
+          // 交易详情向全房间公示（浮窗可见）
+          fromCards: (tp.fromCards || []).map(c => ({ id: c.id, name: c.name, score: c.score })),
+          fromGold: tp.fromGold,
+          toCards: (tp.toCards || []).map(c => ({ id: c.id, name: c.name, score: c.score })),
+          toGold: tp.toGold,
         };
       } else {
         base.tradeProposal = null;
