@@ -484,6 +484,7 @@ function _renderRentDice(view, container) {
 
   container.className = 'game-action-area my-turn';
 
+  const isSpeedMode = view._mode === 'speed';
   const costs = view.diceCosts || { d4: 1, d6: 2, d12: 4, d20: 6, pass: 0 };
   const remainingCards = view.deckSize || 0;
   const d4Free = costs.d4 === 0 || remainingCards <= 2;  // 末两轮免费
@@ -520,7 +521,7 @@ function _renderRentDice(view, container) {
   ` : '';
 
   container.innerHTML = `
-    <div class="action-title">🎲 选择你的骰子</div>
+    <div class="action-title">${isSpeedMode ? '⚡ 极速模式 — 选择骰子' : '🎲 选择你的骰子'}</div>
     <div class="dice-grid">
       ${buttons}
       <button class="dice-btn pass-btn-full"

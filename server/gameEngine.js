@@ -41,6 +41,13 @@ const MODE_CONFIGS = {
   fulldeck: { rounds: 20, initialCash: 20, label: '完整对局' },
 };
 
+// 极速模式专属卡池（不含市券 + 去掉联动复杂的卡，主打直接对抗）
+const SPEED_CARDS = CARDS.filter(c =>
+  !['sq', 'kxqt', 'ltsx', 'dhft', 'sxtc', 'dhmh', 'slj', 'jgpx', 'jofjg', 'dhcxb', 'cjgb', 'rytqy'].includes(c.id)
+);
+// 极速卡池：青铜神树、兵马俑、清明上河图、四羊方尊、元青花
+// = 2张3分 + 1张3分(+2) + 1张3分 + 1张2分(独立重掷)
+
 // 默认常量（向后兼容，实际由 mode 决定）
 let MAX_ROUNDS = 10;
 let STARTING_FUNDS = 12;
@@ -188,12 +195,15 @@ function initGame(roomId, players, modeOpts) {
   const maxRounds = (modeOpts && modeOpts.rounds) || cfg.rounds;
   const startingFunds = (modeOpts && modeOpts.initialCash) || cfg.initialCash;
 
-  const deck = shuffle(CARDS).slice(0, maxRounds);
+  // 极速模式使用专属卡池
+  const cardPool = (modeId === 'speed') ? SPEED_CARDS : CARDS;
+  const deck = shuffle(cardPool).slice(0, maxRounds);
   const state = {
     roomId,
     round: 1,
     maxRounds,
     _startingFunds: startingFunds,  // ★ 保存用于重开
+    _mode: modeId,                  // ★ 模式标识（极速/speed 跳过竞标）
     phase: 'auction',
     deck,
     originalDeck: [...deck],  // ★ 记录本局初始牌堆，用于牌堆总览
@@ -224,7 +234,8 @@ function initGame(roomId, players, modeOpts) {
   initBiddingOrder(state);
   games.set(roomId, state);
   console.log(`[引擎] 房间 ${roomId} 游戏初始化（${cfg.label}），${players.length} 人，牌堆 ${deck.length} 张，初始资金 $${startingFunds}`);
-  broadcast(roomId);
+  // 极速模式的 broadcast 已在 _speedAutoReveal 中完成
+  if (modeId !== 'speed') broadcast(roomId);
   return state;
 }
 
@@ -233,6 +244,12 @@ function initBiddingOrder(state) {
   state.biddingOrder = [];
   state.currentBidderIdx = 0;
   state.bids = [];
+
+  // ★ 极速模式：跳过竞标，直接翻卡进入租骰阶段
+  if (state._mode === 'speed') {
+    _speedAutoReveal(state);
+    return;
+  }
 
   // 设置统一倒计时——所有人同时报价
   const roomId = [...games.entries()].find(([, s]) => s === state)?.[0];
@@ -250,6 +267,46 @@ function initBiddingOrder(state) {
       _settleAuctionAfterAllBids(s, roomId);
     });
   }
+}
+
+/** 极速模式：自动随机翻牌，跳过竞标，直接进入租骰 */
+function _speedAutoReveal(state) {
+  const roomId = [...games.entries()].find(([, s]) => s === state)?.[0];
+  if (!roomId) return;
+
+  // 无拍卖师
+  state.auctioneerId = null;
+  state.commissionRate = 0;
+  state.auctioneerStreak = 0;
+
+  // 随机翻牌
+  const idx = crypto.randomInt(0, state.deck.length);
+  state.revealedCard = state.deck[idx];
+  state.deck.splice(idx, 1);
+  state.dealtCardIds.add(state.revealedCard.id);
+  state.lastBidResults = null;  // 极速模式无暗标结果
+
+  console.log(`[引擎] 极速模式 自动翻牌: ${state.revealedCard.name}`);
+
+  state.phase = 'rentDice';
+  state.bids = [];
+  state.diceSelections = {};
+
+  setTurnTimer(roomId, TURN_TIMEOUT, 'rentDice', () => {
+    const s = games.get(roomId);
+    if (!s || s.phase !== 'rentDice') return;
+    for (const p of s.players) {
+      if (!s.diceSelections.hasOwnProperty(p.id)) {
+        s.diceSelections[p.id] = 'pass';
+      }
+    }
+    s.phase = 'rollDice';
+    _computeAllRolls(s);
+    broadcast(roomId);
+    setTimeout(() => resolveRoll(roomId), 5000);
+  });
+
+  broadcast(roomId);
 }
 
 // -------------------- 2. 拍卖 — submitBid --------------------
@@ -1270,11 +1327,12 @@ function endRound(roomId) {
   state.playersDone = new Set();
   state.lastBidResults = null;   // 清除上轮暗标结果
   state.tieInfo = null;          // 清除平局信息
-  // 重新计算竞标顺序（从上一轮拍卖师开始）
+  // 极速模式自动翻牌 → 非极速模式重新竞标
   initBiddingOrder(state);
 
   console.log(`[引擎] → 第 ${state.round} 轮开始`);
-  broadcast(roomId);
+  // 极速模式的 broadcast 已在 _speedAutoReveal 中完成
+  if (state._mode !== 'speed') broadcast(roomId);
   return { ok: true, round: state.round };
 }
 
@@ -1376,6 +1434,7 @@ function getPlayerView(fullState, playerId) {
     round: fullState.round,
     maxRounds: fullState.maxRounds,
     phase: fullState.phase,
+    _mode: fullState._mode || 'classic',  // 模式标识
     auctioneerId: fullState.auctioneerId,
     turnDeadline: fullState.turnDeadline || null,
     commissionRate: fullState.commissionRate,
@@ -2187,7 +2246,7 @@ function restartGame(socket, io, roomId) {
   state.round = 0;
   state.maxRounds = state.maxRounds;  // 保持原模式
   state.phase = 'waiting';
-  state.deck = shuffle([...CARDS]).slice(0, state.maxRounds);
+  state.deck = shuffle([...(state._mode === 'speed' ? SPEED_CARDS : CARDS)]).slice(0, state.maxRounds);
   state.originalDeck = [...state.deck];  // ★ 重洗牌堆后重置初始牌堆记录
   state.dealtCardIds = new Set();        // ★ 清空已翻开记录
   state.revealedCard = null;
