@@ -446,14 +446,12 @@ function applyAvatarSkin(el, skinData) {
   if (!el) return;
   const frameId = skinData?.avatarFrame ? skinData.avatarFrame : getEquippedSkin('avatarFrame');
   const avatarId = skinData?.avatar ? skinData.avatar : getEquippedSkin('avatar');
-  // 头像底色
-  if (avatarId !== 'default') {
-    const avatarSkin = getSkinInfo('avatar', avatarId);
-    if (avatarSkin && avatarSkin.gradient) {
-      el.style.setProperty('background', avatarSkin.gradient, 'important');
-    }
+  // 头像底色：始终应用，default 使用默认棕色渐变覆盖可能不一致的 CSS 默认色
+  const avatarSkin = getSkinInfo('avatar', avatarId);
+  if (avatarSkin && avatarSkin.gradient) {
+    el.style.setProperty('background', avatarSkin.gradient, 'important');
   }
-  // 头像框
+  // 头像框：default 不额外加框
   if (frameId !== 'default') {
     const frameSkin = getSkinInfo('avatarFrame', frameId);
     if (frameSkin && frameSkin.css) {

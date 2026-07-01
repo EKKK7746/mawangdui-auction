@@ -187,7 +187,7 @@ function _clearSettleTimer() {
 
 // ==================== 回合倒计时 ====================
 
-function _startTurnCountdown(deadline) {
+function _startTurnCountdown(remainingMs) {
   _stopTurnCountdown();
   const bar = document.getElementById('globalTimerBar');
   if (!bar) return;
@@ -196,9 +196,11 @@ function _startTurnCountdown(deadline) {
   if (!fill) return;
 
   const totalMs = 30000;
+  const startTime = Date.now();
+  const initialRemaining = Math.max(0, Number(remainingMs) || 0);
   const update = () => {
-    const now = Date.now();
-    const remaining = Math.max(0, deadline - now);
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, initialRemaining - elapsed);
     const pct = (remaining / totalMs) * 100;
     fill.style.width = pct + '%';
     if (pct < 30) fill.style.background = '#C43A31';

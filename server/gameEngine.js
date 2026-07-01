@@ -1687,7 +1687,7 @@ function getPlayerView(fullState, playerId) {
     phase: fullState.phase,
     _mode: fullState._mode || 'classic',  // 模式标识
     auctioneerId: fullState.auctioneerId,
-    turnDeadline: fullState.turnDeadline || null,
+    turnRemaining: Math.max(0, (fullState.turnDeadline || 0) - Date.now()),  // 避免客户端与服务端时钟不同步
     commissionRate: fullState.commissionRate,
     auctioneerStreak: fullState.auctioneerStreak,
     deckSize: fullState.deck.length,  // 剩余卡牌数（=剩余轮次）

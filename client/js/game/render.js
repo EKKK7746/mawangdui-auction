@@ -452,8 +452,8 @@ function _renderAuction(view, container) {
     </div>
   `;
 
-  if (view.turnDeadline) {
-    _startTurnCountdown(view.turnDeadline);
+  if (view.turnRemaining) {
+    _startTurnCountdown(view.turnRemaining);
   }
 }
 
@@ -570,8 +570,8 @@ function _renderRentDice(view, container) {
     ${upgradeCheckbox}
   `;
 
-  if (view.turnDeadline) {
-    _startTurnCountdown(view.turnDeadline);
+  if (view.turnRemaining) {
+    _startTurnCountdown(view.turnRemaining);
   }
 
   if (hasUpgrade) {
@@ -845,11 +845,11 @@ function _renderTrade(view, container) {
     </div>
   `;
 
-  // 倒计时 — 仿照 settle timer：先渲染 DOM，再启动计时器
-  const deadline = view.turnDeadline;
-  if (deadline) {
+  // 倒计时 — 使用服务端返回的 turnRemaining，避免客户端与服务端时钟不同步
+  const remainingMs = view.turnRemaining;
+  if (remainingMs) {
     const totalSec = 30; // 服务端 TRADE_PHASE_SECONDS
-    let remain = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    let remain = Math.max(0, Math.ceil(remainingMs / 1000));
     const fillEl = document.getElementById('tradeTimerFill');
     const textEl = document.getElementById('tradeTimerText');
     const updateCountdown = () => {
