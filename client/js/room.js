@@ -108,11 +108,19 @@ socket.on('room:player_left', (data) => {
 
 socket.on('room:left', (data) => {
   console.log('[Room] 已离开房间:', data.roomId);
-  // 托管模式：只退到大厅，不退回登录（保留重连能力）
-  if (data && data.managed) {
+
+  // 刚退出观战 → 保持在房间界面（lobby），不回到模式选择
+  if (GameState._justLeftSpectate) {
+    GameState._justLeftSpectate = false;
     showView(Views.LOBBY);
     return;
   }
+
+  // 托管模式：由 game.js 统一处理（登录页浮窗 + 回到模式页）
+  if (data && data.managed) {
+    return;
+  }
+
   goToMode();
 });
 

@@ -184,12 +184,20 @@ io.on('connection', (socket) => {
   socket.on('room:leave', (roomId) => {
     const game = gameEngine.getGame(roomId);
     if (game && game.phase !== 'finished' && game.phase !== 'waiting') {
-      // 游戏进行中 → Bot 托管接管，不从房间移除
+      // 游戏进行中 → Bot 托管接管，并从 roomManager 中移除真人玩家
       gameEngine.disconnectPlayer(roomId, socket.id);
-      // ★ 显式调度托管 Bot
-      botManager.processBots(roomId);
-      // ★ 离开 Socket.IO 房间（停止接收 game_state_update 广播）
-      socket.leave(roomId);
+      const result = roomManager.leaveRoom(socket, roomId);
+      if (result) {
+        if (!result.destroyed) {
+          // 通知房间内其他玩家有人离开
+          socket.to(roomId).emit('room:player_left', { player: result.player, players: result.players });
+          // 显式调度托管 Bot 接管后续操作
+          botManager.processBots(roomId);
+        } else {
+          // 房间已销毁（无人或只剩 Bot），清理 Bot 定时器
+          botManager.cancelRoom(roomId);
+        }
+      }
       socket.emit('room:left', { roomId, managed: true });
       return;
     }

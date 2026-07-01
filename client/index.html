@@ -95,6 +95,18 @@
     <!-- ========== 视图 C：房间页 ========== -->
     <section id="view-login" class="view">
       <div class="login-container">
+        <!-- ★ 托管对局浮窗：显示进行中的房间号和重新加入按钮 -->
+        <div id="managedGameBanner" class="managed-game-banner" style="display:none;">
+          <div class="mgb-body">
+            <div class="mgb-icon">🎮</div>
+            <div class="mgb-info">
+              <div class="mgb-title">有进行中的托管对局</div>
+              <div class="mgb-room">房间 <span id="mgbRoomId">------</span></div>
+            </div>
+            <button class="btn btn-primary mgb-btn" onclick="rejoinGame()">重新加入</button>
+          </div>
+        </div>
+
         <div class="room-header-bar">
           <button class="room-back-btn" onclick="goToMode()">← 返回</button>
           <div class="room-mode-badge" id="roomModeBadge">🏺 经典竞拍</div>

@@ -22,7 +22,15 @@ socket.on('game_state_update', (view) => {
 
   // ★ 已主动退出（托管中）→ 忽略游戏状态更新，防止被拉回游戏
   if (GameState._hasExitedManaged) {
-    console.log('[Game] 已主动退出托管，忽略 game_state_update');
+    // 若上把游戏已结束或进入等待大厅，清理托管浮窗与标记
+    if (view.phase === 'finished' || view.phase === 'waiting') {
+      GameState._hasExitedManaged = false;
+      const banner = document.getElementById('managedGameBanner');
+      if (banner) banner.style.display = 'none';
+      console.log('[Game] 托管对局已结束/重置，清理浮窗');
+    } else {
+      console.log('[Game] 已主动退出托管，忽略 game_state_update');
+    }
     return;
   }
 
@@ -254,12 +262,13 @@ function leaveSpectate() {
   if (GameState.roomId) {
     socket.emit('spectator:leave', GameState.roomId);
   }
+  GameState._justLeftSpectate = true;  // ★ 标记刚退出观战，room:left 处理时回到房间界面
   GameState.isSpectator = false;
   GameState.gameInProgress = false;
   // 清理观战栏
   const sbar = document.getElementById('spectatorBar');
   if (sbar) sbar.remove();
-  goToMode();
+  showView(Views.LOBBY);
 }
 
 // ==================== 顶部相位栏 + 视觉展示区 ====================
@@ -2347,23 +2356,19 @@ socket.on('room:left', (data) => {
   if (data && data.managed) {
     GameState._hasExitedManaged = true;  // ★ 标记已托管退出，阻止 game_state_update 拉回游戏
     if (typeof showToast === 'function') showToast('🤖 已退出，Bot 托管中。可随时重新加入。', 'info');
-    showView(Views.LOBBY);
-    // 保持 roomId 用于重连
-    const roomIdEl = document.getElementById('roomIdDisplay');
-    if (roomIdEl) roomIdEl.textContent = GameState.roomId;
 
-    // 添加重新加入按钮
-    const lobbyActions = document.querySelector('#view-lobby .lobby-actions');
-    if (lobbyActions && !document.getElementById('btnRejoinGame')) {
-      const rejoinBtn = document.createElement('button');
-      rejoinBtn.id = 'btnRejoinGame';
-      rejoinBtn.className = 'btn btn-primary';
-      rejoinBtn.textContent = '🔄 重新加入游戏';
-      rejoinBtn.onclick = rejoinGame;
-      rejoinBtn.style.cssText = 'width:100%;margin-bottom:12px;padding:12px;';
-      // 插到按钮区最前面，保证可见
-      lobbyActions.insertBefore(rejoinBtn, lobbyActions.firstChild);
-    }
+    // 回到该模式的房间界面（登录/创建页），并在顶部显示托管浮窗
+    showView(Views.LOGIN);
+
+    // 更新模式页浮窗
+    const banner = document.getElementById('managedGameBanner');
+    const roomIdSpan = document.getElementById('mgbRoomId');
+    if (banner) banner.style.display = 'block';
+    if (roomIdSpan) roomIdSpan.textContent = GameState.roomId || '------';
+
+    // 清理旧版 lobby 中的重新加入按钮（如有）
+    const oldBtn = document.getElementById('btnRejoinGame');
+    if (oldBtn) oldBtn.remove();
   }
 });
 
@@ -2373,7 +2378,12 @@ function rejoinGame() {
     return;
   }
   GameState._hasExitedManaged = false;  // ★ 清除托管退出标记
-  // 移除重连按钮
+
+  // 隐藏托管浮窗
+  const banner = document.getElementById('managedGameBanner');
+  if (banner) banner.style.display = 'none';
+
+  // 移除旧版 lobby 中的重新加入按钮（如有）
   const btn = document.getElementById('btnRejoinGame');
   if (btn) btn.remove();
 

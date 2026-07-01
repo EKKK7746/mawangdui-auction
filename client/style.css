@@ -245,6 +245,45 @@ body {
   border: 1px solid #F0F0F0;
 }
 
+/* ★ 托管对局浮窗 */
+.managed-game-banner {
+  width: 100%;
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFFBF0 100%);
+  border: 1px solid #E8DCC8;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.mgb-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mgb-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.mgb-info {
+  flex: 1;
+  min-width: 0;
+}
+.mgb-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4A3728;
+}
+.mgb-room {
+  font-size: 12px;
+  color: #8B2252;
+  font-weight: 700;
+}
+.mgb-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
 .join-row {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -506,7 +545,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .phase-visual-card .artifact-frame {
@@ -527,16 +566,11 @@ body {
 
 .phase-visual-card-meta {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 2px;
+  text-align: center;
 }
 
 .phase-visual-card-name {
@@ -5134,6 +5168,17 @@ body {
   .phase-visual-card-name { font-size: 13px; max-width: 140px; }
   .phase-visual-card-score { font-size: 12px; }
   .phase-crown-burst { font-size: 64px; }
+
+  /* 托管对局浮窗移动端 */
+  .managed-game-banner {
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+  }
+  .mgb-icon { font-size: 20px; }
+  .mgb-title { font-size: 11px; }
+  .mgb-room { font-size: 10px; }
+  .mgb-btn { padding: 6px 10px; font-size: 11px; }
 
   /* 顶部决斗视觉区 */
   .phase-duel-player .pdp-avatar {
