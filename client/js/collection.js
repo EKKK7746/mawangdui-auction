@@ -98,8 +98,11 @@ function _loadCollection() {
     const backup = localStorage.getItem(CHEAT_BACKUP_KEY);
     if (backup) {
       localStorage.setItem(COLLECTION_KEY, backup);
-      localStorage.removeItem(CHEAT_BACKUP_KEY);
+    } else {
+      // 无旧存档时直接清空 labrat 污染的数据
+      localStorage.removeItem(COLLECTION_KEY);
     }
+    localStorage.removeItem(CHEAT_BACKUP_KEY);
     localStorage.removeItem(CHEAT_ACTIVE_KEY);
     console.log('[Collection] 🔄 退出作弊模式，已恢复旧存档');
     // 继续正常加载
