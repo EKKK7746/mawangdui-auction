@@ -55,6 +55,7 @@
 
         <div class="start-guide">
           <button id="btnHowToPlay" class="btn btn-guide">📖 如何玩？</button>
+          <button id="btnCollection" class="btn btn-guide" onclick="showView('collection'); renderCollection();">🏛️ 收藏馆</button>
         </div>
       </div>
     </section>
@@ -315,6 +316,23 @@
             <button id="btnExitGame" class="btn btn-danger" onclick="exitGame()">🚪 退出游戏（Bot 托管）</button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ========== 视图 G：收藏馆 ========== -->
+    <section id="view-collection" class="view">
+      <div class="collection-container">
+        <div class="collection-header">
+          <button class="btn-back" onclick="goToMode()">← 返回</button>
+          <h2 class="collection-title">🏛️ 收藏馆</h2>
+        </div>
+        <div class="collection-tabs">
+          <button class="collection-tab active" data-tab="artifacts" onclick="switchCollectionTab('artifacts')">📦 文物图鉴</button>
+          <button class="collection-tab" data-tab="stats" onclick="switchCollectionTab('stats')">📊 对局统计</button>
+          <button class="collection-tab" data-tab="achievements" onclick="switchCollectionTab('achievements')">🏆 成就</button>
+          <button class="collection-tab" data-tab="skins" onclick="switchCollectionTab('skins')">🎨 外观</button>
+        </div>
+        <div class="collection-content" id="collectionContent"></div>
       </div>
     </section>
 
@@ -676,6 +694,8 @@
   <script src="js/state.js"></script>
   <script src="js/socket.js"></script>
   <script src="js/router.js"></script>
+  <script src="js/collection.js"></script>
+  <script src="js/collection-ui.js"></script>
   <script src="js/mode.js"></script>
   <script src="js/room.js"></script>
   <script src="js/lobby.js"></script>

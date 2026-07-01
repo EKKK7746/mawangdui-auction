@@ -5698,3 +5698,379 @@ body {
   color: #999;
   padding: 16px;
 }
+
+/* ============================================================
+   收藏馆页面 (.collection-*)
+   ============================================================ */
+.collection-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.collection-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.collection-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2C2C2C;
+  margin: 0;
+}
+
+/* 标签页 */
+.collection-tabs {
+  display: flex;
+  gap: 4px;
+  background: #F5F0E8;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.collection-tab {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.collection-tab.active {
+  background: #fff;
+  color: #2C2C2C;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.collection-tab:hover:not(.active) {
+  color: #555;
+  background: rgba(255,255,255,0.5);
+}
+
+.collection-content {
+  min-height: 300px;
+}
+
+/* 收集进度 */
+.collect-summary {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.collect-progress-bar {
+  width: 100%;
+  max-width: 400px;
+  height: 8px;
+  background: #E8E0D0;
+  border-radius: 4px;
+  margin: 10px auto 0;
+  overflow: hidden;
+}
+
+.collect-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D4AF37, #C43A31);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* 文物图鉴网格 */
+.artifact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.artifact-card {
+  background: #FFFDF7;
+  border: 2px solid #E8E0D0;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.artifact-card.collected {
+  border-color: #D4AF37;
+  background: #FFFDF0;
+}
+
+.artifact-card.uncollected {
+  opacity: 0.6;
+}
+
+.artifact-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.artifact-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.artifact-lore {
+  font-size: 11px;
+  color: #999;
+  line-height: 1.4;
+}
+
+.artifact-count {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: #C43A31;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.artifact-lock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 700;
+  color: #ccc;
+  background: rgba(255,255,255,0.5);
+  border-radius: 12px;
+}
+
+/* 统计面板 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  background: #FFFDF7;
+  border: 1px solid #E8E0D0;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2C2C2C;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.collect-empty {
+  text-align: center;
+  color: #999;
+  padding: 40px 0;
+  font-size: 15px;
+}
+
+/* 成就列表 */
+.ach-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ach-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #FFFDF7;
+  border: 1px solid #E8E0D0;
+  border-radius: 12px;
+}
+
+.ach-card.unlocked {
+  border-color: #D4AF37;
+  background: #FFFDF0;
+}
+
+.ach-card.locked {
+  opacity: 0.7;
+}
+
+.ach-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.ach-info {
+  flex: 1;
+}
+
+.ach-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2C2C2C;
+}
+
+.ach-desc {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.ach-reward {
+  font-size: 11px;
+  color: #D4AF37;
+  margin-top: 2px;
+}
+
+.ach-status {
+  flex-shrink: 0;
+}
+
+.ach-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.ach-badge.done {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.ach-progress {
+  font-size: 12px;
+  color: #888;
+}
+
+.ach-progress-bar {
+  height: 3px;
+  background: #E8E0D0;
+  border-radius: 2px;
+  margin: -2px 14px 6px;
+  overflow: hidden;
+}
+
+.ach-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D4AF37, #C43A31);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* 外观皮肤 */
+.skin-section {
+  margin-bottom: 24px;
+}
+
+.skin-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C2C2C;
+  margin-bottom: 12px;
+}
+
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.skin-card {
+  background: #FFFDF7;
+  border: 2px solid #E8E0D0;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skin-card.locked {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.skin-card.equipped {
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 2px rgba(212,175,55,0.3);
+}
+
+.skin-card:hover:not(.locked) {
+  border-color: #C43A31;
+  transform: translateY(-2px);
+}
+
+.skin-preview {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  border: 2px solid #E8E0D0;
+}
+
+.skin-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.skin-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.skin-badge.equip {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.skin-badge.lock {
+  background: #F0F0F0;
+  color: #999;
+}
+
+.skin-badge:not(.equip):not(.lock) {
+  background: #D4AF37;
+  color: #fff;
+}
+
+.frame-preview {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B7B6B, #6B5B4B);
+}
+
+.dice-preview {
+  border-radius: 8px;
+}

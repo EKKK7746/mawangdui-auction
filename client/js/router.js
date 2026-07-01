@@ -9,6 +9,7 @@ const Views = {
   LOBBY: 'lobby',
   ROOM_WAIT: 'room-wait',
   GAME: 'game',
+  COLLECTION: 'collection',
 };
 
 /**

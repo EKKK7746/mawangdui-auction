@@ -15,18 +15,48 @@
 
   /* ========== 配置 ========== */
 
-  const PARTICLE_COUNT = 280;          // 粒子总数
+  let PARTICLE_COUNT = 280;             // 粒子总数（可被皮肤覆盖）
   const DICE_OUTLINE_R = 100;          // 骰子轮廓半径
   const NUMBER_W = 80;                 // 数字采样区宽
   const NUMBER_H = 80;                 // 数字采样区高
   const SWIRL_R = 140;                 // 漩涡初始半径
 
-  // 调色板：金色 + 赭红混合（马王堆漆器/金器色系）
-  const PALETTE = [
+  // 调色板：金色 + 赭红混合（马王堆漆器/金器色系）— 可被 setDiceSkin 覆盖
+  let PALETTE = [
     '#D4AF37', '#FFD700', '#C73E3A', '#E8C84A',
     '#A0522D', '#DAA520', '#CD5C5C', '#B8860B',
     '#B8442A', '#F5DEB3', '#D2691E', '#E8A840'
   ];
+
+  /**
+   * 根据主色/辅色/强调色生成粒子调色板
+   */
+  function _generatePalette(primary, secondary, accent) {
+    // 生成 12 种颜色变体（明暗/饱和度变化）
+    const colors = [];
+    const bases = [primary, secondary, accent];
+    for (const base of bases) {
+      colors.push(base);
+      colors.push(_lighten(base, 0.3));
+      colors.push(_darken(base, 0.3));
+      colors.push(_lighten(base, 0.6));
+    }
+    return colors;
+  }
+
+  function _lighten(hex, factor) {
+    const r = Math.min(255, parseInt(hex.slice(1,3), 16) + Math.floor(255 * factor));
+    const g = Math.min(255, parseInt(hex.slice(3,5), 16) + Math.floor(255 * factor));
+    const b = Math.min(255, parseInt(hex.slice(5,7), 16) + Math.floor(255 * factor));
+    return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  function _darken(hex, factor) {
+    const r = Math.max(0, parseInt(hex.slice(1,3), 16) - Math.floor(255 * factor));
+    const g = Math.max(0, parseInt(hex.slice(3,5), 16) - Math.floor(255 * factor));
+    const b = Math.max(0, parseInt(hex.slice(5,7), 16) - Math.floor(255 * factor));
+    return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
 
   // 阶段时长 (ms)
   const DURATION = {
@@ -473,5 +503,15 @@
   window.startDiceAnimation = startDiceAnimation;
   window.cancelDiceAnimation = cancelDiceAnimation;
   window.removeDiceCanvas = removeCanvas;
+
+  /** 设置骰子皮肤（粒子颜色+数量） */
+  window.setDiceSkin = function(primary, secondary, accent, count) {
+    if (primary && secondary && accent) {
+      PALETTE = _generatePalette(primary, secondary, accent);
+    }
+    if (typeof count === 'number' && count > 0) {
+      PARTICLE_COUNT = count;
+    }
+  };
 
 })();

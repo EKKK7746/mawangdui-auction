@@ -221,6 +221,7 @@ function _renderActionArea(view) {
 
   if (newPhase === 'auction') {
     _auctionResultShown = false;
+    _collectionSaved = false;  // 新游戏开始，重置收集保存标记
   }
 
   if (prevPhase && prevPhase !== newPhase) {
@@ -663,6 +664,7 @@ function _renderRollDice(view, container) {
       if (!area) return;
       const displayNum = isReroll ? rawResult.v1 : myResult;
       const v2 = isReroll ? rawResult.v2 : null;
+      if (typeof applyDiceSkin === 'function') applyDiceSkin();
       startDiceAnimation(area, myDiceType, displayNum, isReroll, v2);
     }, startDelay);
   }
@@ -682,6 +684,7 @@ function _renderRollDice(view, container) {
 
 let _tradeCountdownInterval = null;
 let _pendingTradeProposal = null;  // 存储 trade:proposal 事件发来的提案详情
+let _collectionSaved = false;      // 防止重复保存收集数据
 
 function _renderTrade(view, container) {
   container.className = 'game-action-area';
@@ -1214,6 +1217,7 @@ function _renderDuelRollDice(view, container) {
   setTimeout(() => {
     const area = document.getElementById('diceParticleArea');
     if (!area) return;
+    if (typeof applyDiceSkin === 'function') applyDiceSkin();
     startDiceAnimation(area, myDiceType, displayNum, isReroll, myResult.v2);
   }, 150);
 }
@@ -1402,6 +1406,22 @@ function _renderSettle(view, container) {
 
 function _renderFinished(view, container) {
   container.className = 'game-action-area';
+
+  // 收集系统：保存对局结果（仅触发一次）
+  if (!_collectionSaved && typeof updateAfterGame === 'function') {
+    _collectionSaved = true;
+    const newAch = updateAfterGame(view, socket.id);
+    if (newAch && newAch.length > 0) {
+      setTimeout(() => {
+        newAch.forEach(id => {
+          const ach = ACHIEVEMENTS[id];
+          if (ach && typeof window.showToast === 'function') {
+            window.showToast(`🏆 成就解锁：${ach.icon} ${ach.name}！`);
+          }
+        });
+      }, 500);
+    }
+  }
 
   if (GameState._tutorial && GameState._tutorial.active) {
     const completeHtml = renderTutorialComplete();
@@ -1621,6 +1641,12 @@ function _renderPlayerList(view) {
       </div>
     `;
   }).join('');
+
+  // 应用装备的头像皮肤（仅限"我"）
+  if (typeof applyAvatarSkin === 'function') {
+    const myAvatarEl = list.querySelector('.player-row.is-me .pl-avatar');
+    if (myAvatarEl) applyAvatarSkin(myAvatarEl);
+  }
 }
 
 // ==================== 卡牌弹窗 ====================

@@ -36,6 +36,16 @@ function renderPlayerList(players) {
       </li>
     `;
   }).join('');
+
+  // 应用装备的头像皮肤（仅限当前玩家）
+  if (typeof applyAvatarSkin === 'function') {
+    const myAvatars = list.querySelectorAll('.lobby-avatar');
+    sanitized.forEach((p, i) => {
+      if (GameState.isSelf(p.id) && myAvatars[i]) {
+        applyAvatarSkin(myAvatars[i]);
+      }
+    });
+  }
 }
 
 function doKickPlayer(targetId) {
