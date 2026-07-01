@@ -293,6 +293,26 @@ function _renderPhaseBar(view) {
 
   const normalVisual = document.getElementById('phaseVisualNormal');
   const duelVisual = document.getElementById('phaseVisualDuel');
+  const visualWrap = document.querySelector('.game-phase-visual');
+  const phaseBar = document.querySelector('.game-phase-bar');
+
+  // 阶段切换动效：只在 phase 真正变化时触发一次
+  const prevPhase = _lastView?.phase;
+  const phaseChanged = prevPhase && prevPhase !== view.phase;
+  if (phaseChanged) {
+    if (visualWrap) {
+      visualWrap.classList.remove('phase-change-active');
+      void visualWrap.offsetWidth; // 强制重排，允许重新触发动画
+      visualWrap.classList.add('phase-change-active');
+      setTimeout(() => visualWrap.classList.remove('phase-change-active'), 500);
+    }
+    if (phaseBar) {
+      phaseBar.classList.remove('phase-label-change');
+      void phaseBar.offsetWidth;
+      phaseBar.classList.add('phase-label-change');
+      setTimeout(() => phaseBar.classList.remove('phase-label-change'), 400);
+    }
+  }
 
   // 决斗阶段：在顶部视觉区也展示 VS 动效
   if (view.phase === 'duel' && view.duel && normalVisual && duelVisual) {

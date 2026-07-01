@@ -14,10 +14,11 @@ function renderPlayerList(players) {
     const pHost = !!p.isHost;
     const isMe = GameState.isSelf(p.id);
     const canKick = isHost && !isMe && !pHost; // 房主可以踢非自己、非原房主的人
+    const avatarText = (p.nickname?.charAt(0) || '?').toUpperCase();
     return `
       <li>
-        <span class="host-icon">${pHost ? '👑' : '🎭'}</span>
-        <span>${p.nickname}</span>
+        <div class="lobby-avatar${pHost ? ' lobby-avatar-host' : ''}">${avatarText}</div>
+        <span class="lobby-nick" title="${p.nickname}">${p.nickname}</span>
         ${pHost ? '<span class="host-badge">房主</span>' : ''}
         ${isMe ? '<span class="you-tag">(你)</span>' : ''}
         ${canKick ? `<button class="btn-kick-player" onclick="doKickPlayer('${p.id}')" title="踢出玩家">−</button>` : ''}
@@ -95,14 +96,15 @@ socket.on('room:player_left', (data) => {
   console.log('[Room] 玩家离开:', data.player.nickname);
   GameState.players = data.players;
 
-  // 先检查自己是否成为新房主（必须在 renderPlayerList 之前更新 GameState.isHost）
+  // 根据服务器最新状态同步自己的房主身份（防止房主转移后本地状态错乱）
   const me = data.players.find(p => p.id === socket.id);
-  if (me && me.isHost && !GameState.isHost) {
-    GameState.isHost = true;
+  const nowHost = !!(me && me.isHost);
+  if (nowHost && !GameState.isHost) {
     showToast('你已成为房主', 'info');
   }
+  GameState.isHost = nowHost;
 
-  renderPlayerList(data.players);     // ← 此时 GameState.isHost 已正确
+  renderPlayerList(data.players);
   updateLobbyUI();
 });
 
