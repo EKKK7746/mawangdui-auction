@@ -86,7 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnLeaveLobby) {
     btnLeaveLobby.addEventListener('click', () => {
       if (!GameState.roomId) return;
-      socket.emit('room:leave', GameState.roomId);
+      const roomId = GameState.roomId;
+      // 立即重置并返回模式页，不等服务端 room:left
+      goToMode();
+      socket.emit('room:leave', roomId);
     });
   }
 });

@@ -444,8 +444,10 @@ function getSkinBundle() {
 /** 应用头像框样式到 DOM 元素；优先使用传入的 skinData，否则读本地 localStorage */
 function applyAvatarSkin(el, skinData) {
   if (!el) return;
-  const frameId = skinData?.avatarFrame ? skinData.avatarFrame : getEquippedSkin('avatarFrame');
-  const avatarId = skinData?.avatar ? skinData.avatar : getEquippedSkin('avatar');
+  // 传入 skinData 为对象时：缺失字段视为 default，不再回退到本地皮肤（避免把本地皮肤套到别的玩家/Bot 上）
+  const useServerData = typeof skinData === 'object' && skinData !== null;
+  const frameId = useServerData ? (skinData.avatarFrame || 'default') : (skinData?.avatarFrame ? skinData.avatarFrame : getEquippedSkin('avatarFrame'));
+  const avatarId = useServerData ? (skinData.avatar || 'default') : (skinData?.avatar ? skinData.avatar : getEquippedSkin('avatar'));
   // 头像底色：始终应用，default 使用默认棕色渐变覆盖可能不一致的 CSS 默认色
   const avatarSkin = getSkinInfo('avatar', avatarId);
   if (avatarSkin && avatarSkin.gradient) {

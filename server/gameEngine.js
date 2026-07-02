@@ -1940,6 +1940,7 @@ function getSpectatorView(fullState) {
       adjustedScore: calculateCardScore(p.cards) + Math.floor(p.funds / 3),
       isBot: !!p.isBot,
       managed: !!p.managed,  // 托管标识
+      skin: p.skin || {},    // 外观皮肤同步
       cards: p.cards.map(c => ({ id: c.id, name: c.name, score: c.score, effect: c.effect, used: !!c.used })),
       hasDragonPhoenix: p.cards.some(c => c.id === 'ltsx') && p.cards.some(c => c.id === 'kxqt'),
       hasReroll: hasRerollAbility(p),

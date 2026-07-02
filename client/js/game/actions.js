@@ -10,29 +10,23 @@ function leaveSpectate() {
   if (GameState.roomId) {
     socket.emit('spectator:leave', GameState.roomId);
   }
-  GameState._justLeftSpectate = true;
-  GameState.isSpectator = false;
-  GameState.gameInProgress = false;
-  const sbar = document.getElementById('spectatorBar');
-  if (sbar) sbar.remove();
-  showView(Views.LOBBY);
+  // 立即重置并返回模式页，不等服务端 room:left
+  goToMode();
 }
 
 function backToLobby() {
   if (typeof playSound === 'function') playSound('click');
-  if (GameState.roomId) {
-    if (GameState.isSpectator) {
-      socket.emit('spectator:leave', GameState.roomId);
+  const roomId = GameState.roomId;
+  const wasSpectator = GameState.isSpectator;
+  // 立即重置并返回模式页，不等服务端 room:left
+  goToMode();
+  if (roomId) {
+    if (wasSpectator) {
+      socket.emit('spectator:leave', roomId);
     } else {
-      socket.emit('room:leave', GameState.roomId);
+      socket.emit('room:leave', roomId);
     }
   }
-  showView(Views.LOBBY);
-  GameState.roomId = null;
-  GameState._lastPlayers = null;
-  GameState._rejoining = false;
-  GameState.isSpectator = false;
-  GameState.gameInProgress = false;
   const sbar = document.getElementById('spectatorBar');
   if (sbar) sbar.remove();
   const popup = document.getElementById('card-popup');
