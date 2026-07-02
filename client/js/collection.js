@@ -46,8 +46,8 @@ const SKINS = {
   },
   diceEffect: {
     'default':      { name:'默认·漆器金',   primary:'#d4a84b', secondary:'#B85C3A', accent:'#F0D78C', particleCount:280 },
-    'dice_golden':  { name:'流光溢彩',      primary:'#FFD700', secondary:'#FFA500', accent:'#FFF8DC', particleCount:350 },
-    'dice_inferno': { name:'烈焰燎原',      primary:'#FF4500', secondary:'#8B0000', accent:'#FFD700', particleCount:320 },
+    'dice_golden':  { name:'流光溢彩',      primary:'#9B59FF', secondary:'#00D4C4', accent:'#FF6BB5', particleCount:350 },
+    'dice_inferno': { name:'烈焰燎原',      primary:'#FF4500', secondary:'#8B0000', accent:'#FF2400', particleCount:320 },
     'dice_lucky':   { name:'四叶幸运',      primary:'#00CC66', secondary:'#006633', accent:'#AAFFCC', particleCount:260 },
   }
 };

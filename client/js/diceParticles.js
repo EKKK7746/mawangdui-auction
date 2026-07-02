@@ -28,6 +28,11 @@
     '#B8442A', '#F5DEB3', '#D2691E', '#E8A840'
   ];
 
+  // 皮肤主色（用于 GLOW 阶段泛光 + 兜底数字颜色）
+  let SKIN_PRIMARY = '#D4AF37';
+  let SKIN_SECONDARY = '#C73E3A';
+  let SKIN_ACCENT = '#E8C84A';
+
   /**
    * 根据主色/辅色/强调色生成粒子调色板
    */
@@ -56,6 +61,13 @@
     const g = Math.max(0, parseInt(hex.slice(3,5), 16) - Math.floor(255 * factor));
     const b = Math.max(0, parseInt(hex.slice(5,7), 16) - Math.floor(255 * factor));
     return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  function _hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1,3), 16);
+    const g = parseInt(hex.slice(3,5), 16);
+    const b = parseInt(hex.slice(5,7), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
   }
 
   // 阶段时长 (ms)
@@ -425,17 +437,17 @@
       ctx.save();
       ctx.globalAlpha = glowAlpha;
       const grad = ctx.createRadialGradient(CX, CY, DICE_OUTLINE_R * 0.3, CX, CY, DICE_OUTLINE_R * 1.4);
-      grad.addColorStop(0, '#FFC040');
-      grad.addColorStop(0.3, '#C75B3A');
-      grad.addColorStop(0.6, 'rgba(180,68,42,0.35)');
-      grad.addColorStop(1, 'rgba(212,175,55,0)');
+      grad.addColorStop(0, _lighten(SKIN_ACCENT, 0.2));
+      grad.addColorStop(0.3, SKIN_PRIMARY);
+      grad.addColorStop(0.6, _hexToRgba(SKIN_SECONDARY, 0.35));
+      grad.addColorStop(1, _hexToRgba(SKIN_PRIMARY, 0));
       ctx.fillStyle = grad;
       ctx.fillRect(CX - DICE_OUTLINE_R * 2, CY - DICE_OUTLINE_R * 2, DICE_OUTLINE_R * 4, DICE_OUTLINE_R * 4);
       ctx.restore();
 
       // ★ 兜底：中心绘制清晰大数字，确保移动端可见
       ctx.save();
-      ctx.fillStyle = '#C43A31';
+      ctx.fillStyle = SKIN_SECONDARY;
       ctx.shadowColor = 'rgba(255,255,255,0.9)';
       ctx.shadowBlur = 8;
       ctx.textAlign = 'center';
@@ -459,8 +471,8 @@
       ctx.save();
       ctx.globalAlpha = 0.08;
       const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, glowR);
-      grad.addColorStop(0, '#E8C84A');
-      grad.addColorStop(1, 'rgba(199,62,58,0)');
+      grad.addColorStop(0, SKIN_ACCENT);
+      grad.addColorStop(1, _hexToRgba(SKIN_SECONDARY, 0));
       ctx.fillStyle = grad;
       ctx.fillRect(CX - glowR, CY - glowR, glowR * 2, glowR * 2);
       ctx.restore();
@@ -507,6 +519,9 @@
   /** 设置骰子皮肤（粒子颜色+数量） */
   window.setDiceSkin = function(primary, secondary, accent, count) {
     if (primary && secondary && accent) {
+      SKIN_PRIMARY = primary;
+      SKIN_SECONDARY = secondary;
+      SKIN_ACCENT = accent;
       PALETTE = _generatePalette(primary, secondary, accent);
     }
     if (typeof count === 'number' && count > 0) {
